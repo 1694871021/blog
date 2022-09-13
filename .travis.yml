@@ -1,0 +1,27 @@
+sudo: false
+
+language: node_js
+
+node_js:
+  - lts/*
+
+cache: 
+  yarn: true
+
+notifications:
+  email: 
+    onsuccess: never
+    onfailure: change
+
+install:
+  - npm install
+
+script: 
+  - npm run dev
+
+deploy:
+  provider: pages
+  skip_clearup: true
+  keep_history: true
+  github_token: $VUE_WEBPACK_TOKEN
+  local_dir: dist
