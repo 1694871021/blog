@@ -1,6 +1,7 @@
 var { resolve } = require('path');
 var VueLoaderPlugin = require('vue-loader/lib/plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+const { loader } = require('mini-css-extract-plugin');
 module.exports = {
   entry: './src/main.js', //webpack打包入口
   output: {
@@ -14,7 +15,7 @@ module.exports = {
     rules: [
       {
         test: /\.vue$/,
-        loader: 'vue-loader'
+        loader: 'vue-loader',
         // options: {
         //   loaders: {
         //     css: ExtractTextPlugin.extract({
@@ -38,8 +39,16 @@ module.exports = {
         test: /\.css$/,
         use: [
           'vue-style-loader',
-          // 'style-loader',
-          'css-loader'
+          'css-loader',
+          'sass-loader'
+        ]
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          'style-loader',
+          'css-loader',
+          'sass-loader'
         ]
       },
       // 处理图片的loader

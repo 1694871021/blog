@@ -1,0 +1,59 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0
+}
+
+input[type=submit],
+input[type=reset],
+input[type=button],
+button {
+  -webkit-appearance: none
+}
+
+ul,
+ol {
+  list-style: none
+}
+
+a {
+  text-decoration: none
+}
+
+/* 弹出遮罩层 */
+.tipMask {
+  background-color: #000;
+  display: none;
+  height: 100%;
+  left: 0;
+  opacity: 0.4;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 101;
+}
+
+/* 阴影样式 */
+.shadow {
+  box-shadow: 0px 3px 12px 1px #ebebeb;
+}
+
+/* 反向箭头 */
+.jiantou {
+  transform: rotate(180deg);
+}
+
+/* flex样式 */
+.flex {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  /*-webkit-flex-flow: row; 不换行*/
+  align-items: center;
+}

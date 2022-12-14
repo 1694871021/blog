@@ -1,13 +1,11 @@
 <template>
-  <div>
-      <loginVue/>
-      <userVue/>
+  <div id="app">
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import loginVue from './template/login.vue'
-import userVue from './template/user.vue'
+import "./static/css/common.css";
 export default {
   name: 'App',
   data () {
@@ -15,8 +13,6 @@ export default {
     }
   },
   components: {
-    loginVue,
-    userVue
   }
 }
 </script>

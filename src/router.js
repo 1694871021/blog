@@ -3,13 +3,14 @@ import Vue from 'vue';
 Vue.use(Router);
 
 var router = new Router({
+  mode: 'hash',
   routes: [
-    // {
-    //   path: "/",
-    //   name: "home",
-    //   component: () =>
-    //     import("./template/aaa.vue")
-    // }
+    {
+      path: "/",
+      name: "index",
+      component: () =>
+        import("./view/index.vue")
+    }
   ]
 })
 
