@@ -17,13 +17,19 @@ button {
 
 ul,
 ol {
-  list-style: none
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 a {
-  text-decoration: none
+  text-decoration: none;
+  color: #e4ab0d;;
 }
 
+h1,h2,h3,h4,h5,h6 {
+  margin: 0;
+}
 /* 弹出遮罩层 */
 .tipMask {
   background-color: #000;

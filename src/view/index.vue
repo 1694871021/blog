@@ -3,10 +3,11 @@
   <div>
     <nav ref="navs">
       <div class="nav-left">
-        <a  href="">首页</a>
+        <a href="">首页</a>
         <a href="">新闻</a>
         <a href="">心情</a>
-        <a href="">关于</a>
+        <a href="">回忆录</a>
+        <a href="">平时积累案例</a>
       </div>
       <div class="nav-right">
         <a href="#" @click="setTheme('light')">白色主题</a>
@@ -17,24 +18,81 @@
     </nav>
     <header>
       <div class="swiper">
-        <div
-          class="swiper-item"
-          v-for="(item, index) in swiperImg"
-          :key="item"
-          :ref="index"
-        >
+        <div class="swiper-item" v-for="(item, index) in swiperImg" :key="item" :ref="index">
           <img :src="item" alt="" srcset="" />
         </div>
       </div>
     </header>
-    <main></main>
-    <footer>
-      <div class="scale-box">
-        <div class="clouds"></div>
-        <div class="background"></div>
-        <div class="foreground"></div>
+    <main>
+      <div class="main">
+        <div class="main-left">
+          <div class="card">
+            <div class="title">
+              <h4>精选文章</h4>
+              <div>
+                <a href="">更多</a>
+              </div>
+            </div>
+            <div class="content">
+              内容区域
+            </div>
+          </div>
+          <div class="card">
+            <div class="title">
+              <h4>进入热搜</h4>
+              <div>
+                <a href="">更多</a>
+              </div>
+            </div>
+            <div class="content">
+              内容区域
+            </div>
+          </div>
+          <div class="card">
+            <div class="title">
+              <h4>博客文章</h4>
+              <div>
+                <a href="">更多</a>
+              </div>
+            </div>
+            <div class="content">
+              内容区域
+            </div>
+          </div>
+        </div>
+        <div class="main-right">
+          <div class="card">
+            <div class="title">
+              <h4>独家广告</h4>
+              <div>
+                <a href="">申请</a>
+              </div>
+            </div>
+            <div class="content">
+              内容区域
+            </div>
+          </div>
+          <div class="card">
+            <div class="title">
+              <h4>标签云</h4>
+            </div>
+            <div class="content biaoqian">
+              <ul>
+                <li>123</li>
+                <li>123</li>
+                <li>123</li>
+                <li>123</li>
+                <li>123</li>
+                <li>123</li>
+                <li>123</li>
+                <li>123</li>
+                <li>123</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
-    </footer>
+    </main>
   </div>
 </template>
 <script>
@@ -154,59 +212,93 @@ main {
   width: 100%;
   background: var(--main-bg);
   min-height: 400px;
-}
-
-footer {
-  position: absolute;
-  left: 0;
-  right: 0;
-  padding: 15px 0;
-  font-size: 12px;
-  line-height: 1.5;
-  background: var(--footer-bg);
-  .scale-box {
-    bottom: 0;
-    left: 0;
-    height: 1.9rem;
-    position: absolute;
-    width: 100%;
-    z-index: 1;
-    transform: translate3d(0, 0, 0);
+  .main {
+    width: 1100px;
+    margin: 0 auto;
+    padding: 20px 0;
+    display: flex;
+    .main-left {
+      flex: 7;
+      margin-right: 20px;
+    }
+    .main-right {
+      flex: 3;
+    }
   }
-  .clouds {
-    background-repeat: repeat-x !important;
-    background: url(https://cdn.jsdelivr.net/gh/BNDong/Cnblogs-Theme-SimpleMemory@master/img/webp/clouds.webp)
-      repeat-x;
-    background-size: 225em 15em;
-    position: absolute;
-    top: -2em;
-    right: 0;
-    bottom: 0;
-    left: 0;
-  }
-
-  .background {
-    background-repeat: repeat-x !important;
-    background: url(https://cdn.jsdelivr.net/gh/BNDong/Cnblogs-Theme-SimpleMemory@master/img/webp/background.webp)
-      repeat-x;
-    background-size: 225em 21.313em;
-    position: absolute;
-    top: -1em;
-    right: 0;
-    bottom: 0;
-    left: 0;
-  }
-
-  .foreground {
-    background-repeat: repeat-x !important;
-    background: url(https://cdn.jsdelivr.net/gh/BNDong/Cnblogs-Theme-SimpleMemory@master/img/webp/foreground.webp)
-      repeat-x;
-    background-size: 225em 15em;
-    position: absolute;
-    top: 0.1rem;
-    right: 0;
-    bottom: 0;
-    left: 0;
+  .card {
+    margin-bottom: 20px;
+    background: #fff;
+    .title {
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #f5f5f5;
+      padding: 20px 20px 10px 20px;
+    }
+    // > div {
+    //   a {
+    //     font-size: 14px;
+    //   }
+    // }
+    .content {
+      padding: 10px 20px 20px 20px;
+    }
+    .biaoqian {
+      position: relative;
+      ul {
+        height: 100px;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 10px;
+        @keyframes identifier {
+          0% {
+            top: 0;
+            left: 0;
+          }
+          25% {
+            top: 0;
+            left: calc(100% - 20px);
+          }
+          50% {
+            top: calc(100% - 20px);
+            left: calc(100% - 20px);
+          }
+          75% {
+            top: calc(100% - 20px);
+            left: 0;
+          }
+          100% {
+            top: 0;
+            left: 0;
+          }
+        }
+        li {
+          width: 33.3%;
+          box-sizing: border-box;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          &:nth-child(6n + 1), &:nth-child(6n + 2), &:nth-child(6n + 3) {
+            background: #f5f5f5;
+          };
+          &:nth-child(3n + 4), &:nth-child(3n + 5) {
+            border-right: 1px solid #eee;
+          }
+        }
+        &::before {
+          position: absolute;
+          top: 0;
+          left: 0;
+          display: block;
+          width: 20px;
+          height: 20px;
+          content: "";
+          background: #f38b2a;
+          animation: identifier 5s infinite;
+        }
+      }
+    }
   }
 }
 </style>
