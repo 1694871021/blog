@@ -28,7 +28,20 @@
         <div class="main-left">
           <div class="card">
             <div class="title">
-              <h4>精选文章</h4>
+              <h3>精选文章</h3>
+              <div class="select-type">
+                <span>前端</span>
+                <span>后端</span>
+              </div>
+            </div>
+            <div class="content">
+              <items></items>
+              <items></items>
+            </div>
+          </div>
+          <div class="card">
+            <div class="title">
+              <h3>进入热搜</h3>
               <div>
                 <a href="">更多</a>
               </div>
@@ -39,18 +52,7 @@
           </div>
           <div class="card">
             <div class="title">
-              <h4>进入热搜</h4>
-              <div>
-                <a href="">更多</a>
-              </div>
-            </div>
-            <div class="content">
-              内容区域
-            </div>
-          </div>
-          <div class="card">
-            <div class="title">
-              <h4>博客文章</h4>
+              <h3>博客文章</h3>
               <div>
                 <a href="">更多</a>
               </div>
@@ -63,7 +65,7 @@
         <div class="main-right">
           <div class="card">
             <div class="title">
-              <h4>独家广告</h4>
+              <h3>独家广告</h3>
               <div>
                 <a href="">申请</a>
               </div>
@@ -74,7 +76,7 @@
           </div>
           <div class="card">
             <div class="title">
-              <h4>标签云</h4>
+              <h3>标签云</h3>
             </div>
             <div class="content biaoqian">
               <ul>
@@ -96,14 +98,22 @@
   </div>
 </template>
 <script>
+import Items from '../template/item.vue'
 export default {
+  components: {
+    Items
+  },
   data() {
     return {
       theme: "light",
       swiperImg: [
-        "../static/img/57ece79847ae9ba02d62a92b39685cfc.jpg",
-        "../static/img/66d37c36bdde55b052197c0491c91dc3.jpg",
-        "../static/img/d117eb2944493898dd0f24df1e21e84d.jpg",
+        "../static/images/57ece79847ae9ba02d62a92b39685cfc.jpg",
+        "../static/images/src=http___cn.best-wallpaper.net_wallpaper_1366x768_1609_Italy-Ravello-blue-sea-boat-mountains-trees_1366x768.jpg&refer=http___cn.best-wallpaper.webp",
+        "../static/images/src=http___cn.best-wallpaper.net_wallpaper_1920x1080_1410_Nature-landscape-sea-island-trees-green-sky-clouds_1920x1080.jpg&refer=http___cn.best-wallpaper.webp",
+        "../static/images/src=http___img-baofun.zhhainiao.com_fs_9c496c76d67ba31e96a9e1e771d672e0.jpg&refer=http___img-baofun.zhhainiao.png",
+        "../static/images/src=http___pic1.win4000.com_wallpaper_1_53b21a37cd082.jpg&refer=http___pic1.win4000.webp",
+        "../static/images/src=http___pic1.win4000.com_wallpaper_7_5767ba6e2dc08.jpg&refer=http___pic1.win4000.webp",
+        "../static/images/src=http___pic1.win4000.com_wallpaper_7_58146e5a0c05d.jpg&refer=http___pic1.win4000.webp",
       ],
       swiperIndex: 0,
     };
@@ -189,6 +199,7 @@ nav {
   }
 }
 header {
+  width: 100%;
   .swiper {
     width: 100%;
     height: 100vh;
@@ -202,6 +213,9 @@ header {
       overflow: hidden;
       transition: all 1.5s;
       opacity: 0;
+      img {
+        width: calc(100%);
+      }
       &:first-child{
         opacity: 1;
       }
@@ -213,35 +227,38 @@ main {
   background: var(--main-bg);
   min-height: 400px;
   .main {
-    width: 1100px;
+    width: 1200px;
     margin: 0 auto;
     padding: 20px 0;
     display: flex;
     .main-left {
-      flex: 7;
-      margin-right: 20px;
+      width: 70%;
+      margin-right: 15px;
     }
     .main-right {
-      flex: 3;
+      width: 30%;
     }
   }
   .card {
     margin-bottom: 20px;
     background: #fff;
+    border-radius: 5px;
     .title {
       border-radius: 5px;
       display: flex;
       justify-content: space-between;
       border-bottom: 1px solid #f5f5f5;
       padding: 20px 20px 10px 20px;
+      .select-type {
+        span {
+          font-size: 13px;
+          font-weight: bold;
+          margin-left: 5px;
+        }
+      }
     }
-    // > div {
-    //   a {
-    //     font-size: 14px;
-    //   }
-    // }
     .content {
-      padding: 10px 20px 20px 20px;
+      padding: 0 20px 10px 20px;
     }
     .biaoqian {
       position: relative;
