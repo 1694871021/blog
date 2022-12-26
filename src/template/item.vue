@@ -9,14 +9,16 @@
         呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱
       </p>
       <div class="custom-num">
-        <p>
-          <span>呱呱呱</span>
-          <span>呱呱呱</span>
-          <span>呱呱呱</span>
-          <span>呱呱呱</span>
-          <span>呱呱呱</span>
+        <p class="custom-icon">
+          <i class="iconfont icon-shizhong"></i> <span>呱呱呱</span>
+          <i class="iconfont icon-dianzan"></i><span>呱呱呱</span>
+          <i class="iconfont icon-weixin"></i><span>呱呱呱</span>
+          <i class="iconfont icon-chakan"></i><span>呱呱呱</span>
+          <i class="iconfont icon-shoucang"></i><span>呱呱呱</span>
         </p>
-        <p  class="custom-btn">查看详情</p>
+        <p  class="custom-btn">
+          <router-link :to="{path: '/article'}">查看详情</router-link>
+        </p>
       </div>
     </div>
   </div>
@@ -70,16 +72,24 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      .custom-icon > span {
+        margin-right: 5px;
+      }
       .custom-btn {
         width: 80px;
         line-height: 27px;
         text-align: center;
         border-radius: 6px;
-        color: #fff;
         cursor: pointer;
         background: #ff9800;
+        a {
+          color: #fff;
+        }
       }
     }
+  }
+  &:first-child {
+    padding-top: 0;
   }
   &:last-child {
     border: none;

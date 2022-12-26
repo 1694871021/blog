@@ -12,8 +12,8 @@
       <div class="nav-right">
         <a href="#" @click="setTheme('light')">白色主题</a>
         <a href="#" @click="setTheme('dark')">黑色主题</a>
-        <a href="">登录</a>
-        <a href="">注册</a>
+        <router-link to="/login">登录</router-link>
+        <router-link to="/login">注册</router-link>
       </div>
     </nav>
     <header>
@@ -111,7 +111,7 @@ export default {
         "../static/images/src=http___cn.best-wallpaper.net_wallpaper_1366x768_1609_Italy-Ravello-blue-sea-boat-mountains-trees_1366x768.jpg&refer=http___cn.best-wallpaper.webp",
         "../static/images/src=http___cn.best-wallpaper.net_wallpaper_1920x1080_1410_Nature-landscape-sea-island-trees-green-sky-clouds_1920x1080.jpg&refer=http___cn.best-wallpaper.webp",
         "../static/images/src=http___img-baofun.zhhainiao.com_fs_9c496c76d67ba31e96a9e1e771d672e0.jpg&refer=http___img-baofun.zhhainiao.png",
-        "../static/images/src=http___pic1.win4000.com_wallpaper_1_53b21a37cd082.jpg&refer=http___pic1.win4000.webp",
+        "../static/images/7a128281d3833d3f79b858d7c36bed36.jpeg",
         "../static/images/src=http___pic1.win4000.com_wallpaper_7_5767ba6e2dc08.jpg&refer=http___pic1.win4000.webp",
         "../static/images/src=http___pic1.win4000.com_wallpaper_7_58146e5a0c05d.jpg&refer=http___pic1.win4000.webp",
       ],
@@ -258,7 +258,7 @@ main {
       }
     }
     .content {
-      padding: 0 20px 10px 20px;
+      padding: 20px;
     }
     .biaoqian {
       position: relative;
@@ -267,7 +267,6 @@ main {
         width: 100%;
         display: flex;
         flex-wrap: wrap;
-        margin-top: 10px;
         @keyframes identifier {
           0% {
             top: 0;

@@ -39,8 +39,7 @@ module.exports = {
         test: /\.css$/,
         use: [
           'vue-style-loader',
-          'css-loader',
-          'sass-loader'
+          'css-loader'
         ]
       },
       {
@@ -53,7 +52,7 @@ module.exports = {
       },
       // 处理图片的loader
       {
-        test: /\.(pgn|jpg|gif)$/,
+        test: /\.(png|jpeg|jpg|gif)$/,
         loader: 'url-loader',
         options: {
           limit: 8 * 1024,

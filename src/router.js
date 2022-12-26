@@ -10,7 +10,19 @@ var router = new Router({
       name: "index",
       component: () =>
         import("./view/index.vue")
-    }
+    },
+    {
+      path: "/login",
+      name: "login",
+      component: () =>
+        import("./view/login.vue")
+    },
+    {
+      path: "/article",
+      name: "article",
+      component: () =>
+        import("./view/article.vue")
+    },
   ]
 })
 
