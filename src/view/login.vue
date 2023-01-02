@@ -8,7 +8,7 @@
         登录
         <p>
           没有账号？
-          <router-link>去注册 </router-link>
+          <router-link to="">去注册 </router-link>
         </p>
       </div>
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
@@ -16,11 +16,11 @@
           <el-input v-model="ruleForm.phone" placeholder="请输入手机号"></el-input>
         </el-form-item>
         <el-form-item label="" prop="password" label-width="20px">
-          <el-input v-model="ruleForm.password"  placeholder="请输入密码(字母、数字且长度大于等于6位)"></el-input>
+          <el-input v-model="ruleForm.password"  placeholder="请输入密码(字母或数字且长度大于等于6位)"></el-input>
         </el-form-item>
-        <el-form-item label="" prop="passcode" label-width="20px" class="pass-code">
-          <el-input v-model="ruleForm.passcode"  placeholder="请输入验证码"></el-input>
-          <img src="" alt="" class="code-image">
+        <el-form-item label="" prop="code" label-width="20px" class="pass-code">
+          <el-input v-model="ruleForm.code"  placeholder="请输入验证码"></el-input>
+          <img src="http://127.0.0.1:3001/getCaptcha" alt="点击获取验证码" class="code-image" ref="codeImg" @click="getCode">
         </el-form-item>
         <el-form-item  class="login-btn">
           <el-button type="primary" @click="submitForm('ruleForm')">立即登录</el-button>
@@ -44,6 +44,7 @@
   </div>
 </template>
 <script>
+import api, { url } from '../utils/api'
 export default {
   data() {
     var checkCall = (rule, value, callback) => {
@@ -55,7 +56,7 @@ export default {
       }
     }
     var checkPass = (rule, value, callback) => {
-      var reg = new RegExp(/(0-9{1,}a-Z{1,})/);
+      var reg = new RegExp(/^[A-Za-z0-9]{6,}$/);
       if(reg.test(value)) {
         callback()
       } else {
@@ -66,7 +67,7 @@ export default {
       ruleForm: {
         phone: '',
         password: '',
-        passcode: ''
+        code: ''
       },
       rules: {
         phone: [
@@ -78,7 +79,7 @@ export default {
           { required: true, message: '请输入密码', trigger: 'blur' },
           { validator: checkPass, trigger: 'blur'}
         ],
-        passcode: [
+        code: [
           { required: true, message: '请输入验证码', trigger: 'blur' },
           { min: 4, max: 4, message: '长度应为4个字符', trigger: 'blur' }
         ],
@@ -101,19 +102,22 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!');
+          api.verifyCaptcha(this.ruleForm).then((res)=> {
+            console.log(res)
+          })
         } else {
           console.log('error submit!!');
           return false;
         }
       });
+    },
+    getCode() {
+      this.$refs.codeImg.setAttribute('src', url + '/getCaptcha?=t'+Date.now())
     }
   },
-  destroyed() {
-    // var del = document.getElementById('canvas-nest');
-    // var other = document.getElementsByTagName('script');
-    // console.log(123, other, del,    other.parentNode);
-    // other.removeChild(del);
+  beforeDestroy() {
+    var del = document.getElementById('canvas-nest');
+    del.remove();
   }
 }
 </script>
@@ -183,11 +187,11 @@ export default {
     .el-form-item__content {
       display: flex;
       .el-input__inner {
-        width: calc(50%);
-        margin-right: 10px;
+        // margin-right: 10px;
       }
       .code-image {
-        width: calc(45%);
+        width: calc(65%);
+        cursor: pointer;
       }
     }
   }

@@ -18,11 +18,28 @@ var router = new Router({
         import("./view/login.vue")
     },
     {
+      path: "/register",
+      name: "register",
+      component: () =>
+        import("./view/register.vue")
+    },
+    {
       path: "/article",
       name: "article",
       component: () =>
         import("./view/article.vue")
     },
+    {
+      path: '/admin',
+      component: () => import("./view/admin/admin.vue"),
+      name: 'admin',
+      iconCls: 'el-icon-message',//图标样式class
+      children: [
+          {path: '/admin/list', iconCls:'el-icon-s-data', component: () => import("./view/admin/list.vue"), name: '文章列表'},
+          {path: '/admin/add', iconCls:'el-icon-plus', component: () => import("./view/admin/add.vue"), name: '添加文章'},
+          // {path: '/admin/img', component: Img, name: '添加图片'},
+      ]
+    }
   ]
 })
 

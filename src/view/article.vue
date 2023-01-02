@@ -1,6 +1,10 @@
 <template>
   <div class="detail-box">
     <div class="detail-banner">
+      <div class="banner-title">
+        <p>哈哈哈哈哈的博客</p>
+        <p>气味儿问问额鹅鹅鹅</p>
+      </div>
       <img src="../static/images/c6064c3cffb086f20b3ede738184432b.jpeg" alt="">
     </div >
     <div class="article">
@@ -12,14 +16,24 @@
           <span>来源：<i>2022/01/01</i></span>
         </p>
         <!-- 标签 -->
-        <p>
+        <p style="color: #FE9800">
           <i>HTML</i>
           <i>CSS</i>
         </p>
       </div>
       <!-- 内容 -->
       <div class="article-content">
-
+        <div class="detail-mavon">
+          <mavon-editor                                    
+            v-model="markData.content"                                     
+            :subfield="false"                                    
+            :boxShadow="false"                                    
+            defaultOpen="preview"                                    
+            :toolbarsFlag="false"
+            placeholder="请打开目录导航栏，以便获取对应目录..."                                   
+          />
+        </div>                           
+        <div class="detail-menu" :class="{'detail-menu-fixed': isFixed}" v-show="menuContent" v-html="markData.menu"></div>
       </div>
       <!-- 评论一下 -->
       <div class="artice-comment">
@@ -36,41 +50,108 @@
       </div>
       <!-- 评论列表 -->
       <div class="comment-list">
-        <div class="comment-item">
-          <div class="item-cover">
-            <img src="" alt="">
-          </div>
-          <div class="item-box">
-            <div class="item-content">
-              <p class="item-user">用户名</p>
-              <p>哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</p>
-            </div>
-            <div class="item-time">
-              <p>2022-01-01</p>
-              <p>
-                <span>点赞（）</span>
-                <span>回复（）</span>
-                <span>删除</span>
-              </p>
-            </div>
-          </div>
-        </div>
+        <comment>
+          <comment :size="size" :shadow="false"></comment>
+        </comment>
       </div>
     </div>
   </div>
 </template>
 <script>
-  
+import comment from '../template/comment.vue'
+export default {
+  data() {
+    return {
+      squareUrl: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
+      size: 'small',
+      markData:{
+        title: '暖了北港',
+        creattime: '',  
+        view: '0',
+        commentary: '0',
+        like: '0',
+        content:  '',
+      },
+      menuContent: '',
+      isFixed: false
+    }
+  },
+  components: {
+    comment
+  },
+  methods: {
+    getDetails() {
+      let params = {id: this.$route.query.id};
+      api.getArticleDetail(params).then(res => {
+        if (res && res.code == 0) {
+          this.markData = res.data;
+          if(res.data.menu){
+            this.menuContent = res.data.menu;
+          }
+          this.getRecord();
+          this.$nextTick(function(){
+            this.slopeMenu();
+          })
+        }
+      });
+    },
+    // 添加浏览记录
+    getRecord() {
+      this.markData.view += 1;
+      let params = {
+        id: this.$route.query.id,
+        view: this.markData.view
+      };
+      api.addRecord(params).then(res => {
+        if (res && res.code == 0) {  
+        }
+      });
+    },
+    // 处理导航目录
+    slopeMenu(){
+      var _this = window;
+      var gopage = document.querySelectorAll(".detail-menu a");
+      var gopage1 = document.querySelectorAll(".detail-mavon a");
+      var gopage2 = document.getElementsByClassName("detail-mavon")[0];
+      var gopage3 = document.getElementsByClassName("detail-banner")[0];
+      gopage.forEach((item,index) => {
+        item.addEventListener('click', function(){
+          gopage1.forEach((gitem,gindex)=>{
+            if(gitem.id == item.id){
+              if(gitem.offsetTop > 0){
+                var y = gitem.offsetTop + gopage3.offsetHeight - 50;
+                _this.scrollTo(0,y);
+              }
+            }
+          })
+        })
+      }) 
+    }
+  }
+}
 </script>
 <style lang="scss">
 .detail-box {
   background: var(--main-bg);
+  color: #555;
 }
 
 .detail-banner{
   width: 100%;
   height: 100vh;
   overflow: hidden;
+  position: relative;
+  .banner-title {
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    color: #fff;
+    transform: translate(-50%, -50%);
+    p:first-child {
+      font-size: 28px;
+    }
+  }
   img {
     width: 100%;
   }
@@ -90,6 +171,63 @@
   .article-content {
     min-height: 300px;
     background: #fff;
+    .detail-mavon{
+      font-family: "行楷";
+      box-shadow: 0 0 10px 5px rgb(220 220 220 / 30%);
+      -webkit-box-shadow: 0 0 10px 5px rgb(220 220 220 / 30%);
+    }
+    /* 侧边导航栏 */
+    .detail-menu{
+      width: 2.3rem;
+      min-width: 2rem;
+      min-height: 2rem;
+      padding: 0.1rem;
+      background: rgba(255,255,255,.8);
+      box-shadow: 0 0 10px 5px rgb(220 220 220 / 30%);
+      -webkit-box-shadow: 0 0 10px 5px rgb(220 220 220 / 30%);
+      position: absolute;
+      top: 0;
+      right: 0.2rem;
+      z-index: 2000;
+    }
+
+    .detail-menu h1, .detail-menu h2, .detail-menu h3, .detail-menu h4, .detail-menu h5, .detail-menu h6 {
+      margin: 2px 0;
+      font-weight: 500;
+      font-size: 17px;
+      color: #2185d0;
+      border-bottom: none;
+      cursor: pointer;
+      line-height: normal;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      position: relative;
+    }
+
+    .detail-menu a{
+      width: 2rem;
+      height: 0.2rem;
+      position: absolute;
+    }
+
+    .detail-menu h2{
+      padding-left: 0.1rem;
+    }
+    .detail-menu h3{
+      padding-left: 0.2rem;
+    }
+    .detail-menu h4{
+      padding-left: 0.25rem;
+    }
+    .detail-menu h5{
+      padding-left: 0.3rem;
+    }
+    .detail-menu h6{
+      padding-left: 0.35rem;
+    }
   }
   .artice-comment {
     margin-top: 20px;
@@ -129,37 +267,6 @@
 }
 
 .comment-list {
-  margin-top: 20px;
-  background: #fff;
-  .comment-item {
-    display: flex;
-    .item-cover {
-      width: 60px;
-      img {
-        border-radius: 6px;
-      }
-    }
-    .item-box {
-      width: calc(100%);
-      padding: 10px;
-      box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
-    }
-    .item-content {
-      min-height: 50px;
-      .item-user {
-        font-size: 14px;
-        font-weight: 400;
-      }
-    }
-    .item-time {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      span {
-        margin-left: 5px;
-       cursor: pointer; 
-      }
-    }
-  }
+  
 }
 </style>
