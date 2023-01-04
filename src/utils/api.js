@@ -5,44 +5,80 @@ export let url = 'http://127.0.0.1:3001';
 function getTempToken(params) {
   return POST(params, '/crm/auth/getToken.do')
 }
-//获取登录用户信息
-function getPageHeaderInfo(params) {
-  return POST(params, '/crm/auth/getPageHeaderInfo.do')
+// 添加文章
+const addArticle = (params) =>{
+  return POST(params,url + '/addArticle')
+}
+// 删除文章
+const delArticle = (params) =>{
+  return POST(params,url + '/delArticle')
+}
+// 文章列表
+const getRecommendList = (params) =>{
+  return POST(params,url + '/getArticleList')
+}
+// 文章详情
+const getArticleInfo = (params) =>{
+  return POST(params,url + '/getArticleInfo')
+}
+// 文章详情
+const addRecord = (params) =>{
+  return POST(params,url + '/addRecord')
 }
 
-//更改版本号
-function getDictList(params) {
-  return POST(params, '/crm/common/getDictList.do')
+// 发布评论
+const postComments = (params) =>{
+  return POST(params,url + '/users/postComments')
+}
+const getCommentsList = (params) =>{
+  return POST(params,url + '/users/getCommentsList')
 }
 
-function getCaptcha(params) {
-  return GET(params, url + '/getCaptcha')
-} 
 
+// 登录
+const login = (params) =>{
+  return POST(params,url + '/userLogin')
+}
+// 注册
+const registration = (params) =>{
+  return POST(params,url + 'articles/registration')
+}
+
+// 上传文章图片
 function upload(params) {
   return LOAD(params, url + '/uploadImg', {'Content-Type': 'multipart/form-data'})
 } 
-
+// 上传封面图片
 function uploadcoverImg(params) {
   return LOAD(params, url + '/uploadcoverImg', {'Content-Type': 'multipart/form-data'})
 } 
 
-
-// 登录验证码验证
+// 获取验证码
+function getCaptcha(params) {
+  return GET(params, url + '/getCaptcha')
+} 
+// 验证码验证
 function verifyCaptcha(params) {
   return GET(params, url + '/verifyCaptcha')
 }
 
-// 注册验证码发送
+// 注册邮箱验证码发送
 function getEmailCode(params) {
   return POST(params, url + '/getEmailCode')
 } 
 
 export default {
   url,
-  getTempToken,
-  getPageHeaderInfo,
-  getDictList,
+  addArticle,
+  delArticle,
+  getRecommendList,
+  getArticleInfo,
+  addRecord,
+  postComments,
+  getCommentsList,
+  login,
+  registration,
+
   getCaptcha,
   upload,
   uploadcoverImg,

@@ -1,18 +1,18 @@
 <template>
   <div class="comment-item">
     <div class="item-cover">
-      <el-avatar shape="square" :size="size" :src="squareUrl"></el-avatar>
+      <el-avatar shape="square" :size="size" :src="commentInfo.avatar"></el-avatar>
     </div>
     <div class="item-box" :class="{shadow}">
       <div class="item-content">
         <p class="item-user">用户名</p>
-        <p>哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</p>
+        <p>{{commentInfo.username}}</p>
       </div>
       <div class="item-time">
-        <p>2022-01-01</p>
+        <p>{{commentInfo.commentime}}</p>
         <p>
-          <span>点赞（1）</span>
-          <span>回复（1）</span>
+          <span>点赞（{{commentInfo.likenum}}）</span>
+          <span>回复（{{commentInfo.replynum}}）</span>
           <span>删除</span>
         </p>
       </div>
@@ -24,7 +24,6 @@
 export default {
   data() {
     return {
-      squareUrl: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png"
     }
   },
   props: {
@@ -35,6 +34,10 @@ export default {
     shadow: {
       type: Boolean,
       default: true
+    },
+    commentInfo: {
+      type: Object,
+      default: {}
     }
   }
 }

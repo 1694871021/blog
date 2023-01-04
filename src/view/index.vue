@@ -35,7 +35,7 @@
               </div>
             </div>
             <div class="content">
-              <items></items>
+              <items v-for="(item, index) in list" :key="item.id"></items>
               <items></items>
             </div>
           </div>
@@ -98,6 +98,7 @@
   </div>
 </template>
 <script>
+import api from '../utils/api';
 import Items from '../template/item.vue'
 export default {
   components: {
@@ -116,6 +117,7 @@ export default {
         "../static/images/src=http___pic1.win4000.com_wallpaper_7_58146e5a0c05d.jpg&refer=http___pic1.win4000.webp",
       ],
       swiperIndex: 0,
+      list: []
     };
   },
   created() {
@@ -123,6 +125,7 @@ export default {
   },
   mounted() {
     this.initSwiper();
+    this.getList();
     window.addEventListener("scroll", this.fixedNav);
   },
   methods: {
@@ -161,6 +164,18 @@ export default {
         }
         swiperEle[_this.swiperIndex].style.opacity = 1;
       }, 3000);
+    },
+    getList(){
+      var _this = this;
+      let params = { 
+        // page: this.currentPage,
+        // pagesize: 10
+      };
+      api.getRecommendList(params).then((res) => {
+        if (res && res.code == 0) {
+          this.list = res.data;
+        }
+      });
     },
     fixedNav: function (e) {
       let sceollTop =

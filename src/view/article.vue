@@ -39,26 +39,28 @@
       <div class="artice-comment">
         <h4>评论一下</h4>
         <p class="comment-area">
-          <textarea name="" id="" cols="30" rows="10" placeholder="请输入..."></textarea>
+          <textarea name="" id="" cols="30" rows="10" placeholder="请输入..." v-model="mainComment"></textarea>
         </p>
         <div class="comment-num">
           <p>
             32 人参与，0 条评论
           </p>
-          <div class="comment-btn">发布评论</div>
+          <div class="comment-btn" @click="postComments">发布评论</div>
         </div>
       </div>
       <!-- 评论列表 -->
       <div class="comment-list">
-        <comment>
-          <comment :size="size" :shadow="false"></comment>
+        <comment v-for="item in commentList" :key="item.id">
+          <!-- <comment :size="size" :shadow="false"></comment> -->
         </comment>
       </div>
     </div>
   </div>
 </template>
 <script>
-import comment from '../template/comment.vue'
+import comment from '../template/comment.vue';
+import moment from 'moment';
+import api from '../utils/api';
 export default {
   data() {
     return {
@@ -73,11 +75,21 @@ export default {
         content:  '',
       },
       menuContent: '',
-      isFixed: false
+      isFixed: false,
+      mainComment: '',
+      commentList: []
     }
   },
   components: {
     comment
+  },
+  mounted(){
+    var _this = this;
+    api.getCommentsList({articleId: this.$route.query.id || 0}).then((res)=>{
+      if(res.code == 0) {
+        _this.commentList = res.data;
+      }
+    })
   },
   methods: {
     getDetails() {
@@ -106,6 +118,17 @@ export default {
         if (res && res.code == 0) {  
         }
       });
+    },
+    postComments() {
+      var params = Object.assign({}, this.$store.state.userInfo,{conent: this.mainComment, articleId: 11, commentime: '',})
+      api.postComments(params).then((res)=>{
+        if(res.code == 0) {
+          this.$message({
+            type: 'success',
+            message: res.message
+          })
+        }
+      })
     },
     // 处理导航目录
     slopeMenu(){
