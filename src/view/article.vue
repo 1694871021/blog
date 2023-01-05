@@ -2,23 +2,22 @@
   <div class="detail-box">
     <div class="detail-banner">
       <div class="banner-title">
-        <p>哈哈哈哈哈的博客</p>
-        <p>气味儿问问额鹅鹅鹅</p>
+        <p>{{ markData.title }}</p>
+        <p>{{ markData.summary }}</p>
       </div>
       <img src="../static/images/c6064c3cffb086f20b3ede738184432b.jpeg" alt="">
     </div >
     <div class="article">
       <div class="article-title">
-        <h2>哈哈哈哈哈的博客</h2>
-        <p>
-          <span>发布时间：<i>2022/01/01</i></span>
-          <span>作者：<i>2022/01/01</i></span>
-          <span>来源：<i>2022/01/01</i></span>
+        <h2>{{ markData.title }}</h2>
+        <p class="article-auth">
+          <span>发布时间：<i>{{ markData.time }}</i></span>
+          <span>作者：<i>{{ markData.username }}</i></span>
+          <span>来源：<i>{{ markData.username }}个人博客</i></span>
         </p>
         <!-- 标签 -->
         <p style="color: #FE9800">
-          <i>HTML</i>
-          <i>CSS</i>
+          {{markData.tags}}
         </p>
       </div>
       <!-- 内容 -->
@@ -43,16 +42,19 @@
         </p>
         <div class="comment-num">
           <p>
-            32 人参与，0 条评论
+            0 人参与，0 条评论
           </p>
           <div class="comment-btn" @click="postComments">发布评论</div>
         </div>
       </div>
       <!-- 评论列表 -->
-      <div class="comment-list">
-        <comment v-for="item in commentList" :key="item.id">
+      <div class="comment-list" v-if="commentList.length">
+        <comment v-for="item in commentList" :key="item.id" :commentInfo="item" @comments-del="getCommentsList">
           <!-- <comment :size="size" :shadow="false"></comment> -->
         </comment>
+      </div>
+      <div class="no-comment-list" v-else>
+        暂无相关评论...
       </div>
     </div>
   </div>
@@ -64,7 +66,6 @@ import api from '../utils/api';
 export default {
   data() {
     return {
-      squareUrl: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
       size: 'small',
       markData:{
         title: '暖了北港',
@@ -77,24 +78,22 @@ export default {
       menuContent: '',
       isFixed: false,
       mainComment: '',
-      commentList: []
+      commentList: [],
+      articleId: ''
     }
   },
   components: {
     comment
   },
   mounted(){
-    var _this = this;
-    api.getCommentsList({articleId: this.$route.query.id || 0}).then((res)=>{
-      if(res.code == 0) {
-        _this.commentList = res.data;
-      }
-    })
+    this.articleId = this.$route.query.articleId;
+    this.getDetails();
+    // 评论接口
+    this.getCommentsList();
   },
   methods: {
     getDetails() {
-      let params = {id: this.$route.query.id};
-      api.getArticleDetail(params).then(res => {
+      api.getArticleInfo({ articleId: this.articleId }).then(res => {
         if (res && res.code == 0) {
           this.markData = res.data;
           if(res.data.menu){
@@ -107,11 +106,18 @@ export default {
         }
       });
     },
-    // 添加浏览记录
+    getCommentsList() {
+      api.getCommentsList({articleId: this.articleId}).then((res)=>{
+        if(res.code == 0) {
+          this.commentList = res.data;
+        }
+      })
+    },
+    // 添加浏览记录 
     getRecord() {
       this.markData.view += 1;
       let params = {
-        id: this.$route.query.id,
+        articleId: this.articleId,
         view: this.markData.view
       };
       api.addRecord(params).then(res => {
@@ -120,9 +126,32 @@ export default {
       });
     },
     postComments() {
-      var params = Object.assign({}, this.$store.state.userInfo,{conent: this.mainComment, articleId: 11, commentime: '',})
+      if(this.$store.state && !this.$store.state.userInfo.username) {
+        this.$message({
+          type: 'warning',
+          message: '还未登录，请先进行登录！'
+        })
+        return
+      }
+      if(!this.mainComment) {
+        this.$message({
+          type: 'warning',
+          message: '内容不能为空！'
+        })
+        return
+      }
+
+      var params = { 
+        content: this.mainComment,
+        articleId: this.articleId,
+        commentid: Number(Math.random().toString().substr(3,8) + Date.now()).toString(36),
+        commentime: moment().format('YYYY-MM-DD HH:mm:ss')
+      }
+      params = Object.assign({}, params, this.$store.state.userInfo)
       api.postComments(params).then((res)=>{
         if(res.code == 0) {
+          this.commentList.push(params)
+          this.mainComment = ''
           this.$message({
             type: 'success',
             message: res.message
@@ -182,11 +211,17 @@ export default {
 
 .article {
   width: 1200px;
-  margin: 20px auto;
+  margin: 20px auto 0;
+  padding-bottom: 20px;
   .article-title {
-    padding-top: 10px;
+    padding: 10px 0;
     text-align: center;
     background: #fff;
+    .article-auth {
+      span {
+        margin-left: 10px;
+      }
+    }
     p {
       margin-top: 10px;
     }
@@ -283,13 +318,17 @@ export default {
       right: 10px;
       bottom: 10px;
       border-radius: 6px;
+      cursor: pointer;
       color: #fff;
       background: #ff9800;
     }
   }
 }
 
-.comment-list {
-  
+.no-comment-list {
+  line-height: 150px;
+  text-align:center;
+  padding: 0 15px;
+  background: #fff;
 }
 </style>

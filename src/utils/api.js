@@ -5,6 +5,7 @@ export let url = 'http://127.0.0.1:3001';
 function getTempToken(params) {
   return POST(params, '/crm/auth/getToken.do')
 }
+
 // 添加文章
 const addArticle = (params) =>{
   return POST(params,url + '/addArticle')
@@ -26,13 +27,21 @@ const addRecord = (params) =>{
   return POST(params,url + '/addRecord')
 }
 
-// 发布评论
+// 评论
 const postComments = (params) =>{
   return POST(params,url + '/users/postComments')
 }
 const getCommentsList = (params) =>{
   return POST(params,url + '/users/getCommentsList')
 }
+const commentstTumbsup = (params) =>{
+  return POST(params,url + '/users/commentstTumbsup')
+}
+const commentsDel = (params) =>{
+  return POST(params,url + '/users/commentsDel')
+}
+
+
 
 
 // 登录
@@ -76,6 +85,8 @@ export default {
   addRecord,
   postComments,
   getCommentsList,
+  commentstTumbsup,
+  commentsDel,
   login,
   registration,
 

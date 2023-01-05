@@ -8,7 +8,7 @@
         <el-input v-model="form.summary"></el-input>
       </el-form-item>
       <el-form-item label="标签"> 
-        <el-tag :key="tag" v-for="tag in dynamicTags" closable :disable-transitions="false" @close="handleClose(tag)">
+        <el-tag :key="tag" v-for="tag in tags" closable :disable-transitions="false" @close="handleClose(tag)">
           {{tag}}
         </el-tag>
         <el-input class="input-new-tag" v-if="inputVisible" v-model="inputValue" ref="saveTagInput" size="small"
@@ -43,6 +43,7 @@
   </div>
 </template>
 <script>
+import moment from 'moment';
 import api, { url } from '../../utils/api'
 export default {
   name: "add",
@@ -50,16 +51,16 @@ export default {
     return{
       form:{
         title: '',
-
+        
         showImg: '',
         content: '',
-        creattime: ''
+        time: ''
       },
       imageUrl: '',
       domain: 'http://upload.qiniup.com',
       qiniuaddr: 'cdn.qnlya.vip',
 
-      dynamicTags: [],
+      tags: [],
       inputVisible: false,
       inputValue: '',
 
@@ -105,10 +106,11 @@ export default {
   methods: {
     onSubmit:function(){
       let params = this.form;
-      // 上传时间
-      params.creattime = this.getNowFormatDate();
       // 生成导航栏
       let menu = document.getElementsByClassName('v-note-navigation-content')[0].innerHTML;
+      params.articleId = Number(Math.random().toString().substr(3,10) + Date.now()).toString(36);
+      params.time = moment().format('YYYY-MM-DD HH:mm:ss');
+      params.tags = this.tags.join(',');
       params.menu = menu;
       api.addArticle(params).then(res => {
         if(res && res.code==0){
@@ -178,9 +180,7 @@ export default {
     // 上传文章插图
     $imgAdd(pos, $file){
       var formData = new FormData();
-        //创建formdata对象
-        console.log(123, formData, $file)
-
+      //创建formdata对象
       formData.append("test",$file);
       api.upload(formData).then(res => {
         if(res && res.code == 0){
@@ -193,24 +193,8 @@ export default {
 
     },
 
-    // 获取当前时间，格式YYYY-MM-DD
-    getNowFormatDate() {
-        var date = new Date();
-        var seperator1 = "-";
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var strDate = date.getDate();
-        if (month >= 1 && month <= 9) {
-            month = "0" + month;
-        }
-        if (strDate >= 0 && strDate <= 9) {
-            strDate = "0" + strDate;
-        }
-        var currentdate = year + seperator1 + month + seperator1 + strDate;
-        return currentdate;
-    },
     handleClose(tag) {
-      this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
+      this.tags.splice(this.tags.indexOf(tag), 1);
     },
 
     showInput() {
@@ -223,7 +207,7 @@ export default {
     handleInputConfirm() {
       let inputValue = this.inputValue;
       if (inputValue) {
-        this.dynamicTags.push(inputValue);
+        this.tags.push(inputValue);
       }
       this.inputVisible = false;
       this.inputValue = '';

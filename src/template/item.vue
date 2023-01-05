@@ -17,7 +17,7 @@
           <i class="iconfont icon-shoucang"></i><span>呱呱呱</span>
         </p>
         <p  class="custom-btn">
-          <router-link :to="{path: '/article'}">查看详情</router-link>
+          <router-link :to="{path: '/article', query: {articleId:  item.articleId}}">查看详情</router-link>
         </p>
       </div>
     </div>
@@ -25,7 +25,11 @@
 </template>
 <script>
 export default {
-
+  props: {
+    item: {
+      type: Object
+    }
+  }
 }
 </script>
 <style lang="scss">
@@ -60,6 +64,7 @@ export default {
     // text-overflow:ellipsis;
     .custom-text {
       min-height: 45px;
+      font-size: 14px;
       margin: 10px 0;
       overflow : hidden;
       text-overflow: ellipsis;

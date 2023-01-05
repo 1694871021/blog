@@ -35,8 +35,7 @@
               </div>
             </div>
             <div class="content">
-              <items v-for="(item, index) in list" :key="item.id"></items>
-              <items></items>
+              <items v-for="(item) in list" :key="item.articleId" :item="item"></items>
             </div>
           </div>
           <div class="card">
