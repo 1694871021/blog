@@ -9,8 +9,8 @@ var state = {
     content: ''
   },
   userInfo: {
-    username: 'qnlya',
-    avatar: 'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png',
+    username: '',
+    avatar: '',
     userid: '',
   }
 };
@@ -24,8 +24,13 @@ var getters = {
 var mutations = {
   increment(state, payload) {
     if (payload) {
-      state.content = payload
+      for(item in payload) {
+        state.userInfo[item] = payload[item]
+      }
     }
+  },
+  setuserInfo(state, payload) {
+    state.userInfo = payload
   }
 };
 

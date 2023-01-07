@@ -1,20 +1,22 @@
 <template>
   <div class="custom-item clearfix">
     <div class="custom-image">
-      <img src="../static/images/57ece79847ae9ba02d62a92b39685cfc.jpg" alt="">
+      <img :src="item.coverImage" alt="">
     </div>
     <div class="custom-content">
-      <p class="custom-title"><a href="">333333333333</a></p>
+      <p class="custom-title">
+        <router-link :to="{path: '/article', query: {articleId:  item.articleId}}">{{ item.title }}</router-link>
+      </p>
       <p class="custom-text">
-        呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱
+        {{ item.summary }}
       </p>
       <div class="custom-num">
         <p class="custom-icon">
-          <i class="iconfont icon-shizhong"></i> <span>呱呱呱</span>
-          <i class="iconfont icon-dianzan"></i><span>呱呱呱</span>
-          <i class="iconfont icon-weixin"></i><span>呱呱呱</span>
-          <i class="iconfont icon-chakan"></i><span>呱呱呱</span>
-          <i class="iconfont icon-shoucang"></i><span>呱呱呱</span>
+          <i class="iconfont icon-shizhong"></i> <span>{{ item.time }}</span>
+          <i class="iconfont icon-dianzan"></i><span>{{ item.dianzan }}</span>
+          <i class="iconfont icon-chakan"></i><span>{{ item.chakan }}</span>
+          <i class="iconfont icon-weixin"></i><span>{{ item.xiaoxi }}</span>
+          <i class="iconfont icon-shoucang"></i><span>{{ item.shoucang }}</span>
         </p>
         <p  class="custom-btn">
           <router-link :to="{path: '/article', query: {articleId:  item.articleId}}">查看详情</router-link>
@@ -39,13 +41,16 @@ export default {
   background: #fff;
   padding: 10px 0 15px;
   border-bottom: 1px solid #eee;
+  border-radius: 6px;
   .custom-image {
-    width: 30%;
+    width: 230px;
     margin-right: 10px;
+    border-radius: 6px;
     cursor: pointer;
     overflow: hidden;
     img {
       width: 100%;
+      height: 100%;
       &:hover {
         transform: scale(1.1);
         transition: all 0.3s;
@@ -56,7 +61,14 @@ export default {
     width: 70%;
     color: #555;
     .custom-title {
-      font-size: 30px;
+      font-size: 26px;
+      line-height: 30px;
+      a {
+        display: block;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+      }
     }
     // 一行溢出隐藏
     // white-space:nowrap;
@@ -77,9 +89,15 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      .custom-icon > span {
-        margin-right: 5px;
+      .custom-icon {
+        span {
+          margin-right: 5px;
+        }
+        .iconfont {
+          margin-right: 3px;
+        }
       }
+
       .custom-btn {
         width: 80px;
         line-height: 27px;

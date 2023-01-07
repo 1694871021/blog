@@ -2,14 +2,14 @@ import Cookies from 'js-cookie';
 
 const TokenKey = 'JSESSIONID';
 
-export function getToken() {
-  return Cookies.get(TokenKey)
+export function getToken(key) {
+  return Cookies.get(key)
 }
 
-export function setToken(token) {
-  return Cookies.set(TokenKey, token)
+export function setToken(key, value) {
+  return Cookies.set(key, value)
 }
 
-export function removeToken() {
-  return Cookies.remove(TokenKey)
+export function removeToken(key) {
+  return Cookies.remove(key)
 }

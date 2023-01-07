@@ -8,12 +8,12 @@
         登录
         <p>
           没有账号？
-          <router-link to="">去注册 </router-link>
+          <router-link to="/register">去注册 </router-link>
         </p>
       </div>
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="" prop="phone" label-width="20px">
-          <el-input v-model="ruleForm.phone" placeholder="请输入手机号"></el-input>
+        <el-form-item label="" prop="email" label-width="20px">
+          <el-input v-model="ruleForm.email" placeholder="请输入邮箱号"></el-input>
         </el-form-item>
         <el-form-item label="" prop="password" label-width="20px">
           <el-input v-model="ruleForm.password"  placeholder="请输入密码(字母或数字且长度大于等于6位)"></el-input>
@@ -44,9 +44,18 @@
   </div>
 </template>
 <script>
-import api, { url } from '../utils/api'
+import api, { url } from '../utils/api';
+import { setToken } from '../utils/auth'
 export default {
   data() {
+    var checkEmail = (rule, value, callback) => {
+      var reg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+      if(reg.test(value)) {
+        callback()
+      } else {
+        callback(new Error('请输入正确邮箱号'));
+      }
+    }
     var checkCall = (rule, value, callback) => {
       var reg = new RegExp(/^1(3\d|4[5-9]|5[0-35-9]|6[567]|7[0-8]|8\d|9[0-35-9])\d{8}$/);
       if(reg.test(value)) {
@@ -65,15 +74,14 @@ export default {
     }
     return {
       ruleForm: {
-        phone: '',
+        email: '',
         password: '',
         code: ''
       },
       rules: {
-        phone: [
-          { required: true, message: '请输入手机号', trigger: 'blur' },
-          { min: 6, message: '长度大于等于6个字符', trigger: 'blur' },
-          { validator: checkCall, trigger: 'blur'}
+        email: [
+          { required: true, message: '请输入邮箱号', trigger: 'blur' },
+          { validator: checkEmail, trigger: 'blur'}
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
@@ -87,26 +95,34 @@ export default {
     }
   },
   mounted() {
-    this.loadStyle();
   },
   methods: {
-    loadStyle() {
-      var dom = document.createElement('script');
-      dom.id = 'canvas-nest';
-      dom.type = 'text/javascript';
-      dom.src = '../static/canvas-nest.min.js';
-      dom.zIndex = "-2";
-      dom.count = '100';
-      document.body.append(dom);
-    },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           api.verifyCaptcha(this.ruleForm).then((res)=> {
-            console.log(res)
+            if(res.code == 0) {
+              this.$store.state.userInfo = res.data;
+              for(var item in res.data) {
+                setToken('$' + item, res.data[item] )
+              }
+              this.$router.push({path: '/'});
+              this.$message({
+                type: "success",
+                message: res.message
+              });
+            } else {
+              this.$message({
+                type: "warning",
+                message: res.message
+              });
+            }
           })
         } else {
-          console.log('error submit!!');
+          this.$message({
+            type: "warning",
+            message: "校验失败"
+          });
           return false;
         }
       });

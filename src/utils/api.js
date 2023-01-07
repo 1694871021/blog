@@ -41,16 +41,21 @@ const commentsDel = (params) =>{
   return POST(params,url + '/users/commentsDel')
 }
 
-
-
+// 用户信息
+const setUserInfo = (params) =>{
+  return POST(params,url + '/setUserInfo')
+}
+const getUserInfo = (params) =>{
+  return POST(params,url + '/getUserInfo')
+}
 
 // 登录
 const login = (params) =>{
   return POST(params,url + '/userLogin')
 }
 // 注册
-const registration = (params) =>{
-  return POST(params,url + 'articles/registration')
+const register = (params) =>{
+  return POST(params,url + '/register')
 }
 
 // 上传文章图片
@@ -61,6 +66,10 @@ function upload(params) {
 function uploadcoverImg(params) {
   return LOAD(params, url + '/uploadcoverImg', {'Content-Type': 'multipart/form-data'})
 } 
+function uploadHeadSculpture(params) {
+  return LOAD(params, url + '/uploadHeadSculpture', {'Content-Type': 'multipart/form-data'})
+} 
+
 
 // 获取验证码
 function getCaptcha(params) {
@@ -68,7 +77,7 @@ function getCaptcha(params) {
 } 
 // 验证码验证
 function verifyCaptcha(params) {
-  return GET(params, url + '/verifyCaptcha')
+  return POST(params, url + '/verifyCaptcha')
 }
 
 // 注册邮箱验证码发送
@@ -87,12 +96,15 @@ export default {
   getCommentsList,
   commentstTumbsup,
   commentsDel,
+  setUserInfo,
+  getUserInfo,
   login,
-  registration,
+  register,
 
   getCaptcha,
   upload,
   uploadcoverImg,
+  uploadHeadSculpture,
   verifyCaptcha,
   getEmailCode
 }

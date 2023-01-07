@@ -1,13 +1,13 @@
 <template>
   <div class="add-container">
-    <el-form ref="form" :model="form" label-width="80px">
-      <el-form-item label="文章名称" style="width:60%">
-        <el-input v-model="form.title"></el-input>
+    <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="80px">
+      <el-form-item label="文章名称" style="width:60%" prop="title" required>
+        <el-input v-model="ruleForm.title"></el-input>
       </el-form-item>
-      <el-form-item label="文章摘要" style="width:60%">
-        <el-input v-model="form.summary"></el-input>
+      <el-form-item label="文章摘要" style="width:60%" prop="summary" required>
+        <el-input v-model="ruleForm.summary"></el-input>
       </el-form-item>
-      <el-form-item label="标签"> 
+      <el-form-item label="标签" prop="tags" required> 
         <el-tag :key="tag" v-for="tag in tags" closable :disable-transitions="false" @close="handleClose(tag)">
           {{tag}}
         </el-tag>
@@ -18,22 +18,20 @@
         </el-input>
         <el-button v-else class="button-new-tag" size="small" @click="showInput">添加标签</el-button>
       </el-form-item> 
-      <el-form-item label="文章图片"> 
+      <el-form-item label="文章图片" prop="coverImage" required> 
         <el-upload
+          class="avatar-uploader"
           action=""
-          list-type="picture-card"
           :http-request="uploadCover"
-          :on-preview="handlePictureCardPreview"
-          :on-remove="handleRemove"
-          :on-success="handleSuccess">
-          <i class="el-icon-plus"></i>
+          :show-file-list="false"
+          :before-upload="beforeAvatarUpload"
+          :on-success="handleAvatarSuccess">
+          <img v-if="ruleForm.coverImage" :src="ruleForm.coverImage" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
-        <el-dialog :visible.sync="dialogVisible">
-          <img width="100%" :src="dialogImageUrl" alt="">
-        </el-dialog>
       </el-form-item>
-      <el-form-item label="编辑内容">
-        <mavon-editor ref=md :toolbars="toolbars" v-model="form.content" @imgAdd="$imgAdd" class="md"/>
+      <el-form-item label="编辑内容" prop="content" required>
+        <mavon-editor ref=md :toolbars="toolbars" v-model="ruleForm.content" @imgAdd="$imgAdd" class="md"/>
       </el-form-item>
       <el-form-item>
         <el-button type="primary"  size="medium" round @click="onSubmit">确定</el-button>
@@ -49,23 +47,18 @@ export default {
   name: "add",
   data(){
     return{
-      form:{
+      ruleForm:{
         title: '',
-        
-        showImg: '',
+        coverImage: '',
+        tags: '',
         content: '',
         time: ''
       },
-      imageUrl: '',
-      domain: 'http://upload.qiniup.com',
-      qiniuaddr: 'cdn.qnlya.vip',
-
       tags: [],
       inputVisible: false,
       inputValue: '',
+      rules: [],
 
-      dialogImageUrl: '',
-      dialogVisible: false,
       toolbars: {
         bold: true, // 粗体
         italic: true, // 斜体
@@ -105,9 +98,8 @@ export default {
   },
   methods: {
     onSubmit:function(){
-      let params = this.form;
-      // 生成导航栏
-      let menu = document.getElementsByClassName('v-note-navigation-content')[0].innerHTML;
+      let params = this.ruleForm;
+      let menu = document.getElementsByClassName('v-note-navigation-content')[0].innerHTML; // 生成导航栏
       params.articleId = Number(Math.random().toString().substr(3,10) + Date.now()).toString(36);
       params.time = moment().format('YYYY-MM-DD HH:mm:ss');
       params.tags = this.tags.join(',');
@@ -126,13 +118,14 @@ export default {
     handleInputConfirm() {
       let inputValue = this.inputValue;
       if (inputValue) {
-        this.form.tags.push(inputValue);
+        this.tags.push(inputValue);
       }
       this.inputVisible = false;
       this.inputValue = '';
     },
     // 上传展示图片
     handleAvatarSuccess(res, file) {
+      console.log(1111111111111, res, file)
       // this.imageUrl = URL.createObjectURL(file.raw);
     },
     // 上传展示大图
@@ -165,16 +158,11 @@ export default {
       
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg';
       const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!');
-      }
       if (!isLt2M) {
         this.$message.error('上传头像图片大小不能超过 2MB!');
       }
-      return isJPG && isLt2M;
+      return isLt2M;
     },
 
     // 上传文章插图
@@ -193,6 +181,7 @@ export default {
 
     },
 
+    // 处理标签
     handleClose(tag) {
       this.tags.splice(this.tags.indexOf(tag), 1);
     },
@@ -213,31 +202,8 @@ export default {
       this.inputValue = '';
     },
 
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
-    },
-    handlePictureCardPreview(file) {
-      console.log(333, file)
-      if(file.code == 0) {
-        this.$message({
-          type: "success",
-          message: file.message
-        });
-      }
-      this.dialogImageUrl =  file.url;
-      this.dialogVisible = true;
-    },
-    handleSuccess(e) {
-    },
+    // 图片上传
     uploadCover(file) {
-      if(this.dialogImageUrl) {
-
-        this.$message({
-            type: "waring",
-            message: '只能上传一张封面图'
-          });
-          return
-      }
       var formData = new FormData();
       formData.append("cover",file.file);
       api.uploadcoverImg(formData).then(res => {
@@ -246,8 +212,7 @@ export default {
             type: "success",
             message: res.message
           });
-          this.dialogImageUrl = url + res.data;
-          this.dialogVisible = true;
+          this.ruleForm.coverImage = url + res.data;
         } else {
           this.$message({
             type: "waring",
@@ -289,9 +254,11 @@ export default {
     line-height: 178px;
     text-align: center;
   }
+  .el-upload-list--picture-card .el-upload-list__item{
+    height: auto;
+  }
   .avatar {
     width: 178px;
-    height: 178px;
     display: block;
   }
   .el-tag + .el-tag {

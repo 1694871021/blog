@@ -19,11 +19,11 @@
           <el-input v-model="ruleForm.code" placeholder="请输入验证码"></el-input>
           <p @click="getEmailCode">获取验证码</p>
         </el-form-item>
-        <el-form-item prop="phone" label-width="20px">
-          <el-input v-model="ruleForm.phone" placeholder="请输入手机号"></el-input>
-        </el-form-item>
         <el-form-item prop="password" label-width="20px">
           <el-input v-model="ruleForm.password"  placeholder="请输入密码(字母或数字且长度大于等于6位)"></el-input>
+        </el-form-item>
+        <el-form-item prop="password1" label-width="20px">
+          <el-input v-model="ruleForm.password1"  placeholder="请再次输入密码"></el-input>
         </el-form-item>
 
         <el-form-item  class="login-btn">
@@ -46,6 +46,8 @@
 </template>
 <script>
 import api from '../utils/api';
+import { setToken } from '../utils/auth'
+import moment from 'moment';
 export default {
   data() {
     var checkEmail = (rule, value, callback) => {
@@ -72,15 +74,26 @@ export default {
         callback(new Error('请输入正确密码'));
       }
     }
+    var checkPass1 = (rule, value, callback) => {
+      var reg = new RegExp(/^[A-Za-z0-9]{6,}$/);
+      if(reg.test(value)) {
+        if(value !== this.ruleForm.password) {
+          this.password1 = '';
+          callback(new Error('两次输入的密码不一致, 请重新输入'));
+        }
+        callback()
+      } else {
+        callback(new Error('请输入正确密码'));
+      }
+    }
     return {
       ruleForm: {
         email: '',
         code: '',
-        phone: '',
         password: '',
+        password1: ''
       },
       rules: {
-
         email: [
           { required: true, message: '请输入邮箱号', trigger: 'blur' },
           { validator: checkEmail, trigger: 'blur'}
@@ -89,34 +102,40 @@ export default {
           { required: true, message: '请输入验证码', trigger: 'blur' },
           { min: 4, max: 4, message: '长度应为4个字符', trigger: 'blur' }
         ],
-        phone: [
-          { required: true, message: '请输入手机号', trigger: 'blur' },
-          { validator: checkCall, trigger: 'blur'}
-        ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
           { validator: checkPass, trigger: 'blur'}
-        ]
-      }
+        ],
+        password1: [
+          { required: true, message: '请再次输入密码', trigger: 'blur' },
+          { validator: checkPass1, trigger: 'blur'}
+        ],
+      },
+      checkEmail
     }
   },
   mounted() {
-    this.loadStyle();
   },
   methods: {
-    loadStyle() {
-      var dom = document.createElement('script');
-      dom.id = 'canvas-nest';
-      dom.type = 'text/javascript';
-      dom.src = '../static/canvas-nest.min.js';
-      dom.zIndex = "-2";
-      dom.count = '100';
-      document.body.append(dom);
-    },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!');
+          let params = this.ruleForm;
+          params.userid = Number(Math.random().toString().substr(3,6) + Date.now()).toString(36);
+          params.time = moment().format('YYYY-MM-DD HH:mm:ss');
+          params.avatar = 'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png'
+          api.register(params).then(res => {
+            if(res && res.code==0){
+              this.$store.commit('setuserInfo', {email: params.email, userid: params.userid, avatar:params.avatar});
+              setToken('$userid', params.userid)
+              setToken('$avatar', params.avatar)
+              this.$message({
+                type: "success",
+                message: "注册成功"
+              });
+              this.$router.push({path: '/'});
+            }
+          })
         } else {
           console.log('error submit!!');
           return false;
@@ -132,13 +151,15 @@ export default {
         })
         return
       }
-      if(reg.test(this.ruleForm.email)) {
-        this.$message({
-          type: 'warning',
-          message: '邮箱格式不正确'
-        })
+      this.checkEmail('', this.ruleForm.email, function(res){
+        if(res) {
+          this.$message({
+            type: 'warning',
+            message: '邮箱格式不正确'
+          })
         return
-      }
+        }
+      })
       api.getEmailCode(this.ruleForm).then((res)=>{
         if(res.code == 0) {
           this.$message({

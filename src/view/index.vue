@@ -12,8 +12,23 @@
       <div class="nav-right">
         <a href="#" @click="setTheme('light')">白色主题</a>
         <a href="#" @click="setTheme('dark')">黑色主题</a>
-        <router-link to="/login">登录</router-link>
-        <router-link to="/login">注册</router-link>
+        <div v-if="islogin" class="nav-right-avatar">
+          <span>你好，{{ userInfo.username }}</span>
+          <el-popover popper-class="avatar-popper" placement="bottom" width="100" trigger="hover">
+            <ul>
+              <li>消息</li>
+              <li @click="signOut">退出</li>
+            </ul>
+            <div slot="reference">
+              <el-avatar shape="circle" size="large" :src="userInfo.avatar"></el-avatar>
+            </div>
+          </el-popover>
+        </div>
+        <span v-else>
+          <router-link to="/login" >登录</router-link>
+          <a href="#">|</a>
+          <router-link to="/register">注册</router-link>
+        </span>
       </div>
     </nav>
     <header>
@@ -98,6 +113,7 @@
 </template>
 <script>
 import api from '../utils/api';
+import { setToken, getToken, removeToken} from '../utils/auth'
 import Items from '../template/item.vue'
 export default {
   components: {
@@ -116,7 +132,9 @@ export default {
         "../static/images/src=http___pic1.win4000.com_wallpaper_7_58146e5a0c05d.jpg&refer=http___pic1.win4000.webp",
       ],
       swiperIndex: 0,
-      list: []
+      list: [],
+      islogin: false,
+      userInfo: {}
     };
   },
   created() {
@@ -125,10 +143,11 @@ export default {
   mounted() {
     this.initSwiper();
     this.getList();
+    this.getUser();
     window.addEventListener("scroll", this.fixedNav);
   },
   methods: {
-    initTheme: function () {
+    initTheme () {
       let theme = localStorage.getItem("theme") || this.theme;
       let element = document.createElement("link");
       element.setAttribute("id", "theme");
@@ -136,7 +155,7 @@ export default {
       element.setAttribute("href", "../static/css/" + theme + ".css");
       document.head.appendChild(element);
     },
-    setTheme: function (theme) {
+    setTheme (theme) {
       var element = document.getElementById("theme") || "";
       if (element) {
         element.setAttribute("href", "../static/css/" + theme + ".css");
@@ -144,12 +163,23 @@ export default {
         element = document.createElement("link");
         element.setAttribute("id", "theme");
         element.setAttribute("rel", "stylesheet");
-        element.setAttribute("href", "../static/css/" + theme + ".css");
+        element.setAttribute("href", "../static/css/" + theme + ".css");  
         document.head.appendChild(element);
       }
       localStorage.setItem("theme", theme);
     },
-    initSwiper: function () {
+    getUser() {
+      if(this.$store.state.userInfo.userid) {
+        this.userInfo = this.$store.state.userInfo;
+        this.islogin = true;
+        console.log(1111111111111, this.$store.state.userInfo)
+      } else if (getToken('$userid')){
+        this.$store.commit('setuserInfo', {username: getToken('$username'), avatar: getToken('$avatar'), userid: getToken('$userid')});
+        this.userInfo = this.$store.state.userInfo;
+        this.islogin = true;
+      }
+    },
+    initSwiper () {
       let _this = this;
       let swiperEle = document.querySelectorAll(".swiper-item");
       let len = swiperEle.length;
@@ -176,7 +206,7 @@ export default {
         }
       });
     },
-    fixedNav: function (e) {
+    fixedNav (e) {
       let sceollTop =
         document.documentElement.scrollTop || document.body.scrollTop;
       if (sceollTop > 60) {
@@ -185,10 +215,17 @@ export default {
         this.$refs.navs.setAttribute("style", "background:transparent");
       }
     },
+    signOut() {
+      removeToken('$username');
+      removeToken('$avatar');
+      removeToken('$userid');
+      window.location.href= '/'
+      this.$router.push({path: '/'});
+    }
   },
 };
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 nav {
   width: calc(100% - 240px);
   height: 60px;
@@ -209,6 +246,18 @@ nav {
     margin-right: 10px;
     &:last-child {
       margin-right: 0;
+    }
+  }
+  .nav-right {
+    display: flex;
+    align-items: center;
+    .nav-right-avatar {
+      display: flex;
+      align-items: center;
+      >span {
+        color: #f38b2a;
+        margin: 5px;
+      }
     }
   }
 }
@@ -329,6 +378,21 @@ main {
         }
       }
     }
+  }
+}
+.avatar-popper {
+  cursor: pointer;
+}
+.avatar-popper.el-popover {
+  width: 80px !important;
+  min-width: 80px;
+}
+.avatar-popper ul li {
+  border-bottom: 1px solid #eee;
+  line-height: 30px;
+  text-align: center;
+  &:last-child {
+    border-bottom: none
   }
 }
 </style>

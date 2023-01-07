@@ -1,8 +1,8 @@
 <template>
   <section>
     <!--工具条-->
-    <el-col :span="24" class="toolbar" style="padding: 10px;">
-      <el-form :inline="true" :model="filters">
+    <el-col :span="24" class="toolbar" style="padding: 10px;" >
+      <el-form :inline="true" :model="filters" size="mini">
         <el-form-item>
           <el-input v-model="filters.name" placeholder="按标题搜索"></el-input>
         </el-form-item>

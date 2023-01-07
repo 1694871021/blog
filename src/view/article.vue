@@ -5,7 +5,7 @@
         <p>{{ markData.title }}</p>
         <p>{{ markData.summary }}</p>
       </div>
-      <img src="../static/images/c6064c3cffb086f20b3ede738184432b.jpeg" alt="">
+      <img :src="markData.coverImage" alt="">
     </div >
     <div class="article">
       <div class="article-title">
@@ -49,7 +49,7 @@
       </div>
       <!-- 评论列表 -->
       <div class="comment-list" v-if="commentList.length">
-        <comment v-for="item in commentList" :key="item.id" :commentInfo="item" @comments-del="getCommentsList">
+        <comment v-for="item in commentList" :key="item.id" :commentInfo="item" @commentsDel="getCommentsList">
           <!-- <comment :size="size" :shadow="false"></comment> -->
         </comment>
       </div>
