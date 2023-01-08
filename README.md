@@ -36,5 +36,7 @@ require（CommonJS）之类的语句，解析推断出来这个文件所依赖�
 引入vue2 npm i vue@2 vue-loader@15 vue-template-compiler@2
 引入vue3 npm i vue@3 vue-loader@16 vue-template-compiler@3
 
-122133
+用到的技术:
 
+wow.js 实现首页动画效果
+v-viewer 实现图放大功能

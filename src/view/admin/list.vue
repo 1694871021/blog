@@ -20,19 +20,20 @@
       @selection-change="selsChange"
       style="width: 100%;"
     >
-      <el-table-column type="selection" style="width: 10%;"></el-table-column>
-      <el-table-column prop="id" label="id" style="width: 10%;" sortable></el-table-column>
-      <el-table-column prop="title" label="标题" style="width: 35%;" sortable></el-table-column>
-      <el-table-column prop="creattime" label="上传时间" style="width: 15%;" sortable></el-table-column>
-      <el-table-column prop="summary" label="摘要" style="width: 40%;" sortable></el-table-column>
-      <!-- <el-table-column prop="showimg" label="封面" style="width: 100px; padding: 5px;overflow:hidden;">
+      <el-table-column type="selection" width="70"></el-table-column>
+      <el-table-column prop="id" label="id" width="70" sortable></el-table-column>
+      <el-table-column prop="title" label="标题" width="250" sortable></el-table-column>
+      <el-table-column prop="time" label="上传时间" width="200" sortable></el-table-column>
+
+      <el-table-column prop="summary" label="摘要" width="250" sortable></el-table-column>
+      <el-table-column prop="coverImage" label="封面" width="200" style="padding: 5px;overflow:hidden;">
         <template slot-scope="scope">
-          <img :src="scope.row.showimg" min-width="50" height="50" style="padding: 5px" />
+          <img :src="scope.row.coverImage" max-width="50" height="50" style="padding: 5px" />
         </template>
-      </el-table-column> -->
-      <el-table-column label="操作" style="width: 20%;">
+      </el-table-column>
+      <el-table-column label="操作" width="200">
         <template slot-scope="scope">
-          <!-- <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
+          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -51,6 +52,7 @@
 </template>
 
 <script>
+import api from '../../utils/api';  
 export default {
   data() {
     return {
@@ -70,7 +72,7 @@ export default {
     };
   },
   mounted() {
-    // this.getUserList();
+    this.getUserList();
   },
   methods: {
     currentPage(val) {
@@ -96,8 +98,7 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        let params = { id: row.id };
-        api.delArticle(params).then(res => {
+        api.delArticle({ articleId: row.articleId }).then(res => {
           if (res && res.code == 0) {
             this.list.splice(index, 1);
             this.$message({
@@ -115,16 +116,14 @@ export default {
     },
     //显示编辑界面
     handleEdit: function(index, row) {
-      let params = { id: row.id };
       this.editLoading = true;
-      this.$router.push({ path: "/add", query: params });
+      this.$router.push({ path: "/add", query: { articleId: row.articleId } });
       this.editLoading = false;
     },
     selsChange: function(sels) {
       this.sels = sels;
     }
   }
- 
 };
 </script>
 

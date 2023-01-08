@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-item clearfix">
+  <div class="custom-item clearfix wow slideInUp" data-wow-duration="2s" data-wow-iteration="1" data-wow-offset="0">
     <div class="custom-image">
       <img :src="item.coverImage" alt="">
     </div>
@@ -39,29 +39,29 @@ export default {
   display: flex;
   font-size: 12px;
   background: #fff;
-  padding: 10px 0 15px;
-  border-bottom: 1px solid #eee;
+  padding: 20px 15px;
+  margin-bottom: 20px;
   border-radius: 6px;
   .custom-image {
     width: 230px;
-    margin-right: 10px;
+    margin-right: 20px;
     border-radius: 6px;
     cursor: pointer;
     overflow: hidden;
     img {
       width: 100%;
-      height: 100%;
+      transition: all 0.3s;
       &:hover {
         transform: scale(1.1);
-        transition: all 0.3s;
       }
     }
   }
+  
   .custom-content {
-    width: 70%;
+    width: 69%;
     color: #555;
     .custom-title {
-      font-size: 26px;
+      font-size: 22px;
       line-height: 30px;
       a {
         display: block;
@@ -76,14 +76,14 @@ export default {
     // text-overflow:ellipsis;
     .custom-text {
       min-height: 45px;
-      font-size: 14px;
-      margin: 10px 0;
+      font-size: 16px;
+      margin: 10px 0 5px 0;
       overflow : hidden;
       text-overflow: ellipsis;
       display: -webkit-box;
-      -webkit-line-clamp: 3;
+      -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
-      -webkit-line-clamp: 3;
+      -webkit-line-clamp: 2;
     }
     .custom-num {
       display: flex;
@@ -111,12 +111,11 @@ export default {
       }
     }
   }
-  &:first-child {
-    padding-top: 0;
-  }
-  &:last-child {
-    border: none;
-    padding-bottom: 0;
-  }
+  
+  
+}
+.custom-item:first-child {
+  margin-top: -20px;
+  border-radius: 0 0 6px 6px;
 }
 </style>

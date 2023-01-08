@@ -41,7 +41,7 @@
     <main>
       <div class="main">
         <div class="main-left">
-          <div class="card">
+          <div class="card" style="margin-bottom: 0; border-radius: 6px 6px 0 0;">
             <div class="title">
               <h3>精选文章</h3>
               <div class="select-type">
@@ -49,11 +49,10 @@
                 <span>后端</span>
               </div>
             </div>
-            <div class="content">
-              <items v-for="(item) in list" :key="item.articleId" :item="item"></items>
-            </div>
           </div>
-          <div class="card">
+          <items v-for="(item) in list" :key="item.articleId" :item="item">
+          </items>
+          <div class="card wow slideInUp" data-wow-duration="2s" data-wow-iteration="1" data-wow-offset="0">
             <div class="title">
               <h3>进入热搜</h3>
               <div>
@@ -64,7 +63,7 @@
               内容区域
             </div>
           </div>
-          <div class="card">
+          <div class="card wow slideInUp" data-wow-duration="2s" data-wow-iteration="1" data-wow-offset="0">
             <div class="title">
               <h3>博客文章</h3>
               <div>
@@ -77,7 +76,7 @@
           </div>
         </div>
         <div class="main-right">
-          <div class="card">
+          <div  class="card wow slideInUp" data-wow-duration="2s" data-wow-iteration="1" data-wow-offset="0">
             <div class="title">
               <h3>独家广告</h3>
               <div>
@@ -88,7 +87,7 @@
               内容区域
             </div>
           </div>
-          <div class="card">
+          <div  class="card wow slideInUp" data-wow-duration="2s" data-wow-iteration="1" data-wow-offset="0">
             <div class="title">
               <h3>标签云</h3>
             </div>
@@ -144,6 +143,7 @@ export default {
     this.initSwiper();
     this.getList();
     this.getUser();
+    
     window.addEventListener("scroll", this.fixedNav);
   },
   methods: {
@@ -203,6 +203,9 @@ export default {
       api.getRecommendList(params).then((res) => {
         if (res && res.code == 0) {
           this.list = res.data;
+          this.$nextTick(() => {
+            this.$wow.init()
+          });
         }
       });
     },
@@ -305,9 +308,8 @@ main {
   .card {
     margin-bottom: 20px;
     background: #fff;
-    border-radius: 5px;
+    border-radius: 6px;
     .title {
-      border-radius: 5px;
       display: flex;
       justify-content: space-between;
       border-bottom: 1px solid #f5f5f5;

@@ -102,7 +102,7 @@ export default {
         if (valid) {
           api.verifyCaptcha(this.ruleForm).then((res)=> {
             if(res.code == 0) {
-              this.$store.state.userInfo = res.data;
+              this.$store.commit('setuserInfo', res.data);
               for(var item in res.data) {
                 setToken('$' + item, res.data[item] )
               }
@@ -130,10 +130,6 @@ export default {
     getCode() {
       this.$refs.codeImg.setAttribute('src', url + '/getCaptcha?=t'+Date.now())
     }
-  },
-  beforeDestroy() {
-    var del = document.getElementById('canvas-nest');
-    del.remove();
   }
 }
 </script>

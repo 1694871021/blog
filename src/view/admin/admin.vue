@@ -15,16 +15,16 @@
       </el-col>
       <el-col :span="4" class="userinfo">
         <el-dropdown trigger="hover">
-          <span class="el-dropdown-link userinfo-inner"
-            ><img :src="this.sysUserAvatar" /> {{ sysUserName }}</span
-          >
-          <el-dropdown-menu slot="dropdown">
+          <span class="el-dropdown-link userinfo-inner">
+            <img :src="userInfo.avatar" />  {{ userInfo.username }}
+          </span>
+          <!-- <el-dropdown-menu slot="dropdown">
             <el-dropdown-item>我的消息</el-dropdown-item>
             <el-dropdown-item>设置</el-dropdown-item>
             <el-dropdown-item divided @click.native="logout"
               >退出登录</el-dropdown-item
-            >
-          </el-dropdown-menu>
+            > -->
+          <!-- </el-dropdown-menu> -->
         </el-dropdown>
       </el-col>
     </el-col>
@@ -106,19 +106,8 @@
             </template>
             <template v-else>
               <li class="el-submenu">
-                <div
-                  class="el-submenu__title el-menu-item"
-                  style="
-                    padding-left: 20px;
-                    height: 56px;
-                    line-height: 56px;
-                    padding: 0 20px;
-                  "
-                  :class="
-                    $route.path == item.children[0].path ? 'is-active' : ''
-                  "
-                  @click="$router.push(item.children[0].path)"
-                >
+                <div class="el-submenu__title el-menu-item" style=" padding-left: 20px; height: 56px; line-height: 56px; padding: 0 20px;"
+                  :class="$route.path == item.children[0].path ? 'is-active' : ''" @click="$router.push(item.children[0].path)">
                   <i :class="item.iconCls"></i>
                 </div>
               </li>
@@ -131,10 +120,7 @@
           <el-col :span="24" class="breadcrumb-container">
             <strong class="title">{{ $route.name }}</strong>
             <el-breadcrumb separator="/" class="breadcrumb-inner">
-              <el-breadcrumb-item
-                v-for="item in $route.matched"
-                :key="item.path"
-              >
+              <el-breadcrumb-item v-for="item in $route.matched" :key="item.path">
                 {{ item.name }}
               </el-breadcrumb-item>
             </el-breadcrumb>
@@ -158,6 +144,7 @@ export default {
       collapsed: false,
       sysUserName: "",
       sysUserAvatar: "",
+      userInfo: this.$store.state.userInfo,
       form: {
         name: "",
         region: "",
@@ -169,6 +156,10 @@ export default {
         desc: "",
       },
     };
+  },
+  mounted() {
+    console.log(55555555555555555 ,this.$store.state.userInfo)
+    this.userInfo = this.$store.state.userInfo;
   },
   methods: {
     onSubmit() {
@@ -201,16 +192,8 @@ export default {
       this.$refs.menuCollapsed.getElementsByClassName(
         "submenu-hook-" + i
       )[0].style.display = status ? "block" : "none";
-    },
-  },
-  mounted() {
-    var user = sessionStorage.getItem("user");
-    if (user) {
-      user = JSON.parse(user);
-      this.sysUserName = user.name || "";
-      this.sysUserAvatar = user.avatar || "";
     }
-  },
+  }
 };
 </script>
 
@@ -348,133 +331,4 @@ export default {
   background-color: #fff;
   box-sizing: border-box;
 }
-
-/* // .container {
-// 	position: absolute;
-// 	top: 0px;
-// 	bottom: 0px;
-// 	width: 100%;
-// 	font-size: 20px;
-// 	.header {
-// 		height: 60px;
-// 		line-height: 60px;
-// 		background: #999;
-// 		color:#fff;
-// 		.userinfo {
-// 			text-align: right;
-// 			padding-right: 35px;
-// 			float: right;
-// 			.userinfo-inner {
-// 				cursor: pointer;
-// 				color:#fff;
-// 				img {
-// 					width: 40px;
-// 					height: 40px;
-// 					border-radius: 20px;
-// 					margin: 10px 0px 10px 10px;
-// 					float: right;
-// 				}
-// 			}
-// 		}
-// 		.logo {
-// 			//width:230px;
-// 			height:60px;
-// 			font-size: 22px;
-// 			padding-left:20px;
-// 			padding-right:20px;
-// 			border-color: rgba(238,241,146,0.3);
-// 			border-right-width: 1px;
-// 			border-right-style: solid;
-// 			img {
-// 				width: 40px;
-// 				float: left;
-// 				margin: 10px 10px 10px 18px;
-// 			}
-// 			.txt {
-// 				color:#fff;
-// 			}
-// 		}
-// 		.logo-width{
-// 			width:230px;
-// 		}
-// 		.logo-collapse-width{
-// 			width:60px
-// 		}
-// 		.tools{
-// 			padding: 0px 23px;
-// 			width:14px;
-// 			height: 60px;
-// 			line-height: 60px;
-// 			cursor: pointer;
-// 		}
-// 	}
-// 	.main {
-// 		display: flex;
-// 		// background: #324057;
-// 		position: absolute;
-// 		top: 60px;
-// 		bottom: 0px;
-// 		overflow: hidden;
-// 		aside {
-// 			flex:0 0 230px;
-// 			width: 230px;
-// 			// position: absolute;
-// 			// top: 0px;
-// 			// bottom: 0px;
-// 			.el-menu{
-// 				height: 100%;
-// 			}
-// 			.collapsed{
-// 				width:60px;
-// 				.item{
-// 					position: relative;
-// 				}
-// 				.submenu{
-// 					position:absolute;
-// 					top:0px;
-// 					left:60px;
-// 					z-index:99999;
-// 					height:auto;
-// 					display:none;
-// 				}
-
-// 			}
-// 		}
-// 		.menu-collapsed{
-// 			flex:0 0 60px;
-// 			width: 60px;
-// 		}
-// 		.menu-expanded{
-// 			flex:0 0 230px;
-// 			width: 230px;
-// 		}
-// 		.content-container {
-// 			// background: #f1f2f7;
-// 			flex:1;
-// 			// position: absolute;
-// 			// right: 0px;
-// 			// top: 0px;
-// 			// bottom: 0px;
-// 			// left: 230px;
-// 			overflow-y: scroll;
-// 			padding: 20px;
-// 			.breadcrumb-container {
-// 				//margin-bottom: 15px;
-// 				.title {
-// 					width: 200px;
-// 					float: left;
-// 					color: #475669;
-// 				}
-// 				.breadcrumb-inner {
-// 					float: right;
-// 				}
-// 			}
-// 			.content-wrapper {
-// 				margin-top: 10px;
-// 				background-color: #fff;
-// 				box-sizing: border-box;
-// 			}
-// 		}
-// 	}
-// } */
 </style>

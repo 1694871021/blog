@@ -27,6 +27,28 @@
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
       </el-form-item>
+      <el-form-item label="个性化banner图" prop="bannerAvatar">
+        <el-upload action="" list-type="picture-card" :http-request="uploadCover1" :before-upload="beforeAvatarUpload">
+          <i slot="default" class="el-icon-plus"></i>
+          <div slot="file" slot-scope="{file}">
+            <img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
+            <span class="el-upload-list__item-actions">
+              <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
+                <i class="el-icon-zoom-in"></i>
+              </span>
+              <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleDownload(file)"> 
+                <i class="el-icon-download"></i>
+              </span>
+              <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleRemove(file)">
+                <i class="el-icon-delete"></i>
+              </span>
+            </span>
+          </div>
+        </el-upload>
+        <el-dialog :visible.sync="dialogVisible">
+          <img width="100%" :src="dialogImageUrl" alt="">
+        </el-dialog>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary"  size="medium" round @click="submitForm('ruleForm')">确定</el-button>
         <el-button  size="medium" round>取消</el-button>
@@ -49,9 +71,13 @@ export default {
       tags: [],
       inputVisible: false,
       inputValue: '',
-      dialogVisible: false,
       rules: {},
-      defaultAvatar: 'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png'
+
+      defaultAvatar: 'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png',
+      dialogImageUrl: '',
+      dialogVisible: false,
+      disabled: false,
+      fileList: []
     }
   },
   methods: {
@@ -60,8 +86,11 @@ export default {
         if (valid) {
           let params = this.ruleForm;
           // 生成导航栏
-          params.userid = this.$store.state.userInfo.userid || 12333123;
+          params.userid = this.$store.state.userInfo.userid;
           params.tag = this.tags.join(',');
+          if(this.fileList.length) {
+            params.filelist = this.fileList.join(',');
+          }
           if(!params.avatar) {
             params.avatar = this.defaultAvatar;
           }
@@ -74,7 +103,6 @@ export default {
             }
           })
         } else {
-          console.log('error submit!!');
           return false;
         }
       });
@@ -120,6 +148,7 @@ export default {
     uploadCover(file) {
       var formData = new FormData();
       formData.append("cover",file.file);
+      formData.uploadType = '1';
       api.uploadHeadSculpture(formData).then(res => {
         if(res && res.code == 0){
           this.$message({
@@ -134,7 +163,38 @@ export default {
           });
         }
       })
-      
+    },
+    uploadCover1(file) {
+      var formData = new FormData();
+      formData.append("cover",file.file);
+      formData.uploadType = '2';
+      api.uploadHeadSculpture(formData).then(res => {
+        if(res && res.code == 0){
+          this.fileList.push({
+            name: file.name,
+            url: url + res.data
+          })
+          this.$message({
+            type: "success",
+            message: res.message
+          });
+        } else {
+          this.$message({
+            type: "error",
+            message: file.message
+          });
+        }
+      })
+    },
+    handleRemove(file) {
+      console.log(file);
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
+    handleDownload(file) {
+      console.log(file);
     }
   }
 };

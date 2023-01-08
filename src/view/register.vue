@@ -171,12 +171,6 @@ export default {
         }
       })
     }
-  },
-  destroyed() {
-    // var del = document.getElementById('canvas-nest');
-    // var other = document.getElementsByTagName('script');
-    // console.log(123, other, del,    other.parentNode);
-    // other.removeChild(del);
   }
 }
 </script>
