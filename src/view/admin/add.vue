@@ -1,6 +1,6 @@
 <template>
   <div class="add-container">
-    <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="80px">
+    <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" size="mini">
       <el-form-item label="文章名称" style="width:60%" prop="title" required>
         <el-input v-model="ruleForm.title"></el-input>
       </el-form-item>
@@ -57,7 +57,7 @@ export default {
       tags: [],
       inputVisible: false,
       inputValue: '',
-      rules: [],
+      rules: {},
 
       toolbars: {
         bold: true, // 粗体

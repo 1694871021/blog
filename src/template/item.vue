@@ -75,9 +75,9 @@ export default {
     // overflow:hidden;
     // text-overflow:ellipsis;
     .custom-text {
-      min-height: 45px;
+      min-height: 40px;
       font-size: 16px;
-      margin: 10px 0 5px 0;
+      margin: 10px 0;
       overflow : hidden;
       text-overflow: ellipsis;
       display: -webkit-box;

@@ -38,6 +38,7 @@ var router = new Router({
           {path: '/admin/list', iconCls:'el-icon-s-data', component: () => import("./view/admin/list.vue"), name: '文章列表'},
           {path: '/admin/add', iconCls:'el-icon-plus', component: () => import("./view/admin/add.vue"), name: '添加文章'},
           {path: '/admin/user', iconCls:'el-icon-plus', component: () => import("./view/admin/user.vue"), name: '用户管理'},
+          {path: '/admin/navigation', iconCls:'el-icon-plus', component: () => import("./view/admin/navigation.vue"), name: '背景图管理'},
           // {path: '/admin/img', component: Img, name: '添加图片'},
       ]
     }

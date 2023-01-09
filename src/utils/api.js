@@ -48,6 +48,13 @@ const setUserInfo = (params) =>{
 const getUserInfo = (params) =>{
   return POST(params,url + '/getUserInfo')
 }
+const setBannerImage = (params) =>{
+  return POST(params,url + '/setBannerImage')
+}
+const getBannerList = (params) =>{
+  return POST(params,url + '/getBannerList')
+}
+
 
 // 登录
 const login = (params) =>{
@@ -98,6 +105,8 @@ export default {
   commentsDel,
   setUserInfo,
   getUserInfo,
+  setBannerImage,
+  getBannerList,
   login,
   register,
 

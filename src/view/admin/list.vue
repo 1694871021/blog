@@ -25,13 +25,13 @@
       <el-table-column prop="title" label="标题" width="250" sortable></el-table-column>
       <el-table-column prop="time" label="上传时间" width="200" sortable></el-table-column>
 
-      <el-table-column prop="summary" label="摘要" width="250" sortable></el-table-column>
+      <el-table-column prop="summary" label="摘要" width="250"></el-table-column>
       <el-table-column prop="coverImage" label="封面" width="200" style="padding: 5px;overflow:hidden;">
         <template slot-scope="scope">
           <img :src="scope.row.coverImage" max-width="50" height="50" style="padding: 5px" />
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="200">
+      <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>

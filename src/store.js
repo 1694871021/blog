@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import { getToken} from './utils/auth'
 Vue.use(Vuex);
 
 var state = {
@@ -17,6 +18,9 @@ var state = {
 var getters = {
   getCount(state) {
     return state.content
+  },
+  getuserId(state) {
+    return state.userInfo.userid || getToken('$userid')
   }
 };
 

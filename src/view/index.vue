@@ -14,15 +14,16 @@
         <a href="#" @click="setTheme('dark')">黑色主题</a>
         <div v-if="islogin" class="nav-right-avatar">
           <span>你好，{{ userInfo.username }}</span>
-          <el-popover popper-class="avatar-popper" placement="bottom" width="100" trigger="hover">
-            <ul>
-              <li>消息</li>
-              <li @click="signOut">退出</li>
-            </ul>
-            <div slot="reference">
-              <el-avatar shape="circle" size="large" :src="userInfo.avatar"></el-avatar>
-            </div>
-          </el-popover>
+          <el-dropdown>
+            <el-avatar shape="circle" size="large" :src="userInfo.avatar"></el-avatar>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item>消息</el-dropdown-item>
+              <el-dropdown-item>
+                <router-link to="/admin">个人中心</router-link>
+              </el-dropdown-item>
+              <el-dropdown-item @click="signOut" divided>退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </div>
         <span v-else>
           <router-link to="/login" >登录</router-link>

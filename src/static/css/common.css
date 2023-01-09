@@ -193,3 +193,32 @@ iframe {
   /*-webkit-flex-flow: row; 不换行*/
   align-items: center;
 }
+
+/* element 样式修改 */
+.el-table__header tr {
+}
+
+.el-table__header tr th {
+  color: #409EFF;
+  font-weight: 600;
+  padding: 0 !important;
+  background: rgba(238, 238, 238, 0.45) !important;
+  border-top:  1px solid #EBEEF5;
+}
+
+.el-table__header tr th .caret-wrapper .ascending {
+  border-bottom-color: #409EFF;
+}
+
+.el-table__header tr th .caret-wrapper .descending {
+  border-top-color: #409EFF;
+}
+
+.el-form-item .el-form-item__label {
+  text-align: left;
+  font-size: 13px;  
+}
+
+.el-upload-list--picture-card .el-upload-list__item {
+  height: auto !important;
+}

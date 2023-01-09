@@ -1,6 +1,6 @@
 <template>
   <div class="add-container">
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="80px">
+    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" size="mini">
       <el-form-item label="姓名" prop="username" style="width:60%" required>
         <el-input v-model="ruleForm.username"></el-input>
       </el-form-item>
