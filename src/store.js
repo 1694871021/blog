@@ -21,6 +21,13 @@ var getters = {
   },
   getuserId(state) {
     return state.userInfo.userid || getToken('$userid')
+  },
+  getUserInfo(state) {
+    return {
+      username: state.userInfo.username || getToken('$username'),
+      userid: state.userInfo.userid || getToken('$userid'),
+      avatar: state.userInfo.avatar || getToken('$avatar'),
+    }
   }
 };
 

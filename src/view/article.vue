@@ -41,16 +41,25 @@
           <textarea name="" id="" cols="30" rows="10" placeholder="请输入..." v-model="mainComment"></textarea>
         </p>
         <div class="comment-num">
-          <p>
-            0 人参与，0 条评论
-          </p>
-          <div class="comment-btn" @click="postComments">发布评论</div>
+          <p> 0 人参与，0 条评论 </p>
+          <div class="comment-btn" @click="postComments">发布</div>
         </div>
       </div>
       <!-- 评论列表 -->
       <div class="comment-list" v-if="commentList.length">
-        <comment v-for="item in commentList" :key="item.id" :commentInfo="item" @commentsDel="getCommentsList">
-          <!-- <comment :size="size" :shadow="false"></comment> -->
+        <comment v-for="(item) in commentList" :key="item.commentid" :commentInfo="item" @commentReply="reply" @commentsDel="getCommentsList" >
+          <comment v-for="subitem in item.subcomment" :key="subitem.commentid" :commentInfo="subitem" :size="size" :shadow="false"
+           @commentReply="reply" @commentsDel="getCommentsList"></comment>
+
+          <div class="sub-comment" v-show="subCommentShow && item.commentid == parentId">
+            <p class="comment-area">
+              <textarea name="" id="" cols="30" :rows="subCommentrow" :placeholder="placeholder" v-model="subComment" @focus="subCommentblur"></textarea>
+            </p>
+            <div class="comment-num" v-show="subCommentbtn">
+              <p></p>
+              <div class="comment-btn" @click="postComments1">发布</div>
+            </div>
+          </div>
         </comment>
       </div>
       <div class="no-comment-list" v-else>
@@ -66,7 +75,7 @@ import api from '../utils/api';
 export default {
   data() {
     return {
-      size: 'small',
+      size: 'medium',
       markData:{
         title: '暖了北港',
         creattime: '',  
@@ -76,10 +85,17 @@ export default {
         content:  '',
       },
       menuContent: '',
-      isFixed: false,
       mainComment: '',
+      subComment: '',
+      placeholder: '请输入...',
+      isFixed: false,
       commentList: [],
-      articleId: ''
+      articleId: '',
+      parentId: '',
+      subCommentShow: false,
+      replyusername: '', //点击子评论回复时对应的用户名
+      subCommentrow: 1,
+      subCommentbtn: false
     }
   },
   components: {
@@ -115,18 +131,11 @@ export default {
     },
     // 添加浏览记录 
     getRecord() {
-      this.markData.view += 1;
-      let params = {
-        articleId: this.articleId,
-        view: this.markData.view
-      };
-      api.addRecord(params).then(res => {
-        if (res && res.code == 0) {  
-        }
+      api.addRecord({ articleId: this.articleId }).then(res => {
       });
     },
     postComments() {
-      if(this.$store.state && !this.$store.state.userInfo.username) {
+      if(!this.$store.getters.getuserId) {
         this.$message({
           type: 'warning',
           message: '还未登录，请先进行登录！'
@@ -147,10 +156,11 @@ export default {
         commentid: Number(Math.random().toString().substr(3,8) + Date.now()).toString(36),
         commentime: moment().format('YYYY-MM-DD HH:mm:ss')
       }
-      params = Object.assign({}, params, this.$store.state.userInfo)
+
+      params = Object.assign({}, params, this.$store.getters.getUserInfo)
       api.postComments(params).then((res)=>{
         if(res.code == 0) {
-          this.commentList.push(params)
+          this.commentList.unshift(params)
           this.mainComment = ''
           this.$message({
             type: 'success',
@@ -158,6 +168,67 @@ export default {
           })
         }
       })
+    },
+    postComments1() {
+      if(!this.$store.getters.getuserId) {
+        this.$message({
+          type: 'warning',
+          message: '还未登录，请先进行登录！'
+        })
+        return
+      }
+      if(!this.subComment) {
+        this.$message({
+          type: 'warning',
+          message: '内容不能为空！'
+        })
+        return
+      }
+      var params = { 
+        content: this.subComment,
+        articleId: this.articleId,
+        parentid: this.parentid,
+        replyusername: this.replyusername || '',
+        commentid: Number(Math.random().toString().substr(3,8) + Date.now()).toString(36),
+        commentime: moment().format('YYYY-MM-DD HH:mm:ss')
+      }
+      params = Object.assign({}, params, this.$store.getters.getUserInfo)
+      api.postComments(params).then((res)=>{
+        if(res.code == 0) {
+          this.commentList.forEach(item => {
+            if(item.commentid == this.parentId) {
+              item.subcomment.unshift(params);
+            }
+          })
+          this.subComment = '';
+          this.subCommentShow = false;
+          this.$message({
+            type: 'success',
+            message: res.message
+          })
+        }
+      })
+    },
+
+    reply(e) {
+      if(e.parentid) {
+        this.parentId = e.parentid;
+        this.replyusername = e.username;
+        
+      } else {
+        this.parentId = e.commentid;
+        this.replyusername = '';
+      }
+      this.placeholder = '回复 @' + e.username + ':';
+      this.subCommentShow = !this.subCommentShow;
+      if(!this.subCommentShow) {
+        this.subCommentrow = 1;
+        this.subCommentbtn = false
+      }
+    },
+    subCommentblur() {
+      this.subCommentrow = 6;
+      this.subCommentbtn = true;
     },
     // 处理导航目录
     slopeMenu(){
@@ -293,7 +364,7 @@ export default {
     position: relative;
     background: #fff;
     .comment-area {
-      height: 150px;
+      height: auto;
       padding: 20px;
       margin: 10px 0;
       border-radius: 6px;
@@ -309,18 +380,54 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      font-size: 13px;
+      .comment-btn {
+        line-height: 30px;
+        text-align: center;
+        padding: 0 20px;
+        border-radius: 6px;
+        cursor: pointer;
+        color: #fff;
+        background: #ff9800;
+      }
     }
-    .comment-btn {
-      width: 80px;
-      line-height: 30px;
-      text-align: center;
-      position: absolute;
-      right: 10px;
-      bottom: 10px;
-      border-radius: 6px;
-      cursor: pointer;
-      color: #fff;
-      background: #ff9800;
+    
+  }
+  .sub-comment {
+    position: relative;
+    background: #fff;
+    .comment-area {
+      margin: 6px 0;
+      transition: all 1s;
+      textarea {
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px solid #e2e2e2;
+        padding: 10px;
+        color: #555;
+        border-radius: 6px;
+        background-color: #f0eeee;
+        transition: all 1s;
+        // border: 1px solid var(--bg_darken);
+        // border-radius: 5px;
+        // color: var(--font_2);
+        // background-color: var(--bg);
+      }
+    }
+    .comment-num {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      .comment-btn {
+        line-height: 30px;
+        text-align: center;
+        padding: 0 20px;
+        border-radius: 6px;
+        cursor: pointer;
+        color: #fff;
+        background: #ff9800;
+      }
     }
   }
 }

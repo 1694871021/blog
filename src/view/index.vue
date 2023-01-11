@@ -3,11 +3,13 @@
   <div>
     <nav ref="navs">
       <div class="nav-left">
-        <a href="">首页</a>
-        <a href="">新闻</a>
-        <a href="">心情</a>
-        <a href="">回忆录</a>
-        <a href="">平时积累案例</a>
+        <el-tabs v-model="activeName" @tab-click="handleClick">
+          <el-tab-pane label="首页" name="home">首页</el-tab-pane>
+          <el-tab-pane label="新闻" name="news">新闻</el-tab-pane>
+          <el-tab-pane label="心情" name="mood">心情</el-tab-pane>
+          <el-tab-pane label="回忆录" name="memoir">回忆录</el-tab-pane>
+          <el-tab-pane label="平时积累案例" name="case">平时积累案例</el-tab-pane>
+        </el-tabs>
       </div>
       <div class="nav-right">
         <a href="#" @click="setTheme('light')">白色主题</a>
@@ -33,121 +35,47 @@
       </div>
     </nav>
     <header>
-      <div class="swiper">
-        <div class="swiper-item" v-for="(item, index) in swiperImg" :key="item" :ref="index">
-          <img :src="item" alt="" srcset="" />
-        </div>
-      </div>
+       <banner :site="site"></banner>
     </header>
     <main>
-      <div class="main">
-        <div class="main-left">
-          <div class="card" style="margin-bottom: 0; border-radius: 6px 6px 0 0;">
-            <div class="title">
-              <h3>精选文章</h3>
-              <div class="select-type">
-                <span>前端</span>
-                <span>后端</span>
-              </div>
-            </div>
-          </div>
-          <items v-for="(item) in list" :key="item.articleId" :item="item">
-          </items>
-          <div class="card wow slideInUp" data-wow-duration="2s" data-wow-iteration="1" data-wow-offset="0">
-            <div class="title">
-              <h3>进入热搜</h3>
-              <div>
-                <a href="">更多</a>
-              </div>
-            </div>
-            <div class="content">
-              内容区域
-            </div>
-          </div>
-          <div class="card wow slideInUp" data-wow-duration="2s" data-wow-iteration="1" data-wow-offset="0">
-            <div class="title">
-              <h3>博客文章</h3>
-              <div>
-                <a href="">更多</a>
-              </div>
-            </div>
-            <div class="content">
-              内容区域
-            </div>
-          </div>
-        </div>
-        <div class="main-right">
-          <div  class="card wow slideInUp" data-wow-duration="2s" data-wow-iteration="1" data-wow-offset="0">
-            <div class="title">
-              <h3>独家广告</h3>
-              <div>
-                <a href="">申请</a>
-              </div>
-            </div>
-            <div class="content">
-              内容区域
-            </div>
-          </div>
-          <div  class="card wow slideInUp" data-wow-duration="2s" data-wow-iteration="1" data-wow-offset="0">
-            <div class="title">
-              <h3>标签云</h3>
-            </div>
-            <div class="content biaoqian">
-              <ul>
-                <li>123</li>
-                <li>123</li>
-                <li>123</li>
-                <li>123</li>
-                <li>123</li>
-                <li>123</li>
-                <li>123</li>
-                <li>123</li>
-                <li>123</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
+      <router-view></router-view>
     </main>
   </div>
 </template>
 <script>
 import api from '../utils/api';
 import { setToken, getToken, removeToken} from '../utils/auth'
-import Items from '../template/item.vue'
+import banner from '../template/banner.vue'
 export default {
   components: {
-    Items
+    banner
   },
   data() {
     return {
       theme: "light",
-      swiperImg: [
-        "../static/images/57ece79847ae9ba02d62a92b39685cfc.jpg",
-        "../static/images/src=http___cn.best-wallpaper.net_wallpaper_1366x768_1609_Italy-Ravello-blue-sea-boat-mountains-trees_1366x768.jpg&refer=http___cn.best-wallpaper.webp",
-        "../static/images/src=http___cn.best-wallpaper.net_wallpaper_1920x1080_1410_Nature-landscape-sea-island-trees-green-sky-clouds_1920x1080.jpg&refer=http___cn.best-wallpaper.webp",
-        "../static/images/src=http___img-baofun.zhhainiao.com_fs_9c496c76d67ba31e96a9e1e771d672e0.jpg&refer=http___img-baofun.zhhainiao.png",
-        "../static/images/7a128281d3833d3f79b858d7c36bed36.jpeg",
-        "../static/images/src=http___pic1.win4000.com_wallpaper_7_5767ba6e2dc08.jpg&refer=http___pic1.win4000.webp",
-        "../static/images/src=http___pic1.win4000.com_wallpaper_7_58146e5a0c05d.jpg&refer=http___pic1.win4000.webp",
-      ],
-      swiperIndex: 0,
-      list: [],
       islogin: false,
-      userInfo: {}
+      userInfo: {},
+      site: 'index',
+      activeName: 'home'
     };
   },
   created() {
     this.initTheme();
   },
   mounted() {
-    this.initSwiper();
-    this.getList();
     this.getUser();
     
     window.addEventListener("scroll", this.fixedNav);
+    
+    window.addEventListener('hashchange',() => {
+      console.log('hash变化');
+    },false);
   },
   methods: {
+    handleClick(e) {
+      this.$router.push({path: e.name})
+      this.site = e.name;
+    },
     initTheme () {
       let theme = localStorage.getItem("theme") || this.theme;
       let element = document.createElement("link");
@@ -173,42 +101,11 @@ export default {
       if(this.$store.state.userInfo.userid) {
         this.userInfo = this.$store.state.userInfo;
         this.islogin = true;
-        console.log(1111111111111, this.$store.state.userInfo)
       } else if (getToken('$userid')){
         this.$store.commit('setuserInfo', {username: getToken('$username'), avatar: getToken('$avatar'), userid: getToken('$userid')});
         this.userInfo = this.$store.state.userInfo;
         this.islogin = true;
       }
-    },
-    initSwiper () {
-      let _this = this;
-      let swiperEle = document.querySelectorAll(".swiper-item");
-      let len = swiperEle.length;
-      let timer = null;
-      clearInterval(timer);
-      timer = setInterval(function () {
-        _this.swiperIndex++;
-        if (len === _this.swiperIndex) _this.swiperIndex = 0;
-        for (let i of swiperEle) {
-          i.style.opacity = 0;
-        }
-        swiperEle[_this.swiperIndex].style.opacity = 1;
-      }, 3000);
-    },
-    getList(){
-      var _this = this;
-      let params = { 
-        // page: this.currentPage,
-        // pagesize: 10
-      };
-      api.getRecommendList(params).then((res) => {
-        if (res && res.code == 0) {
-          this.list = res.data;
-          this.$nextTick(() => {
-            this.$wow.init()
-          });
-        }
-      });
     },
     fixedNav (e) {
       let sceollTop =
@@ -231,9 +128,9 @@ export default {
 </script>
 <style lang="scss">
 nav {
-  width: calc(100% - 240px);
+  width: calc(100% - 320px);
   height: 60px;
-  padding: 0 120px;
+  padding: 0 160px;
   background: transparent;
   position: fixed;
   top: 0;
@@ -244,6 +141,22 @@ nav {
   align-items: center;
   transition: all 1.5s;
   .nav-left {
+    .el-tabs__header {
+      margin: 0;
+    }
+    .el-tabs__nav-wrap:after {
+      height: 0;
+    }
+    .el-tabs__content {
+      display: none;
+    }
+    .el-tabs__active-bar {
+      height: 1px;
+    }
+    .el-tabs__item {
+      height: 60px;
+      line-height: 60px;
+    }
   }
   a {
     color: var(--nav-color);
@@ -267,27 +180,6 @@ nav {
 }
 header {
   width: 100%;
-  .swiper {
-    width: 100%;
-    height: 100vh;
-    position: relative;
-    overflow: hidden;
-    .swiper-item {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      overflow: hidden;
-      transition: all 1.5s;
-      opacity: 0;
-      img {
-        width: calc(100%);
-      }
-      &:first-child{
-        opacity: 1;
-      }
-    }
-  }
 }
 main {
   width: 100%;
