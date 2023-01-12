@@ -32,8 +32,8 @@
             placeholder="请打开目录导航栏，以便获取对应目录..."                                   
           />
         </div>                           
-        <div class="detail-menu" :class="{'detail-menu-fixed': isFixed}" v-show="menuContent" v-html="markData.menu"></div>
       </div>
+      <div class="detail-menu" :class="{isFixed}" v-show="menuContent" v-html="markData.menu"></div>
       <!-- 评论一下 -->
       <div class="artice-comment">
         <h4>评论一下</h4>
@@ -102,10 +102,15 @@ export default {
     comment
   },
   mounted(){
+    this.$parent.onSend(false);
     this.articleId = this.$route.query.articleId;
     this.getDetails();
     // 评论接口
     this.getCommentsList();
+    document.addEventListener('scroll', this.handleScroll)
+  },
+  beforeDestroy() {
+    document.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
     getDetails() {
@@ -187,7 +192,7 @@ export default {
       var params = { 
         content: this.subComment,
         articleId: this.articleId,
-        parentid: this.parentid,
+        parentid: this.parentId,
         replyusername: this.replyusername || '',
         commentid: Number(Math.random().toString().substr(3,8) + Date.now()).toString(36),
         commentime: moment().format('YYYY-MM-DD HH:mm:ss')
@@ -202,6 +207,9 @@ export default {
           })
           this.subComment = '';
           this.subCommentShow = false;
+          // 隐藏发布按钮
+          this.subCommentrow = 1;
+          this.subCommentbtn = false
           this.$message({
             type: 'success',
             message: res.message
@@ -235,11 +243,11 @@ export default {
       var _this = window;
       var gopage = document.querySelectorAll(".detail-menu a");
       var gopage1 = document.querySelectorAll(".detail-mavon a");
-      var gopage2 = document.getElementsByClassName("detail-mavon")[0];
-      var gopage3 = document.getElementsByClassName("detail-banner")[0];
+      var gopage3 = document.getElementsByClassName("detail-box")[0];
       gopage.forEach((item,index) => {
         item.addEventListener('click', function(){
           gopage1.forEach((gitem,gindex)=>{
+            console.log(3333333333333, gitem.id, item.id)
             if(gitem.id == item.id){
               if(gitem.offsetTop > 0){
                 var y = gitem.offsetTop + gopage3.offsetHeight - 50;
@@ -249,16 +257,29 @@ export default {
           })
         })
       }) 
+    },
+    handleScroll() {
+      //获取滚动时的高度
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+      if (scrollTop > 760) {
+        this.isFixed = true
+      }else{
+        this.isFixed = false
+      }
     }
+  },
+  beforeDestroy() {
+    this.$parent.onSend(true)
   }
 }
 </script>
 <style lang="scss">
 .detail-box {
+  width: 100%;
   background: var(--main-bg);
   color: #555;
 }
-
+ 
 .detail-banner{
   width: 100%;
   height: 100vh;
@@ -281,9 +302,13 @@ export default {
 }
 
 .article {
-  width: 1200px;
-  margin: 20px auto 0;
+  width: calc(100% - 240px);
+  padding: 0 120px;
   padding-bottom: 20px;
+  margin-top: 20px;
+  position: relative;
+  box-sizing: border-box;
+  position: relative;
   .article-title {
     padding: 10px 0;
     text-align: center;
@@ -305,22 +330,22 @@ export default {
       box-shadow: 0 0 10px 5px rgb(220 220 220 / 30%);
       -webkit-box-shadow: 0 0 10px 5px rgb(220 220 220 / 30%);
     }
-    /* 侧边导航栏 */
-    .detail-menu{
-      width: 2.3rem;
-      min-width: 2rem;
-      min-height: 2rem;
-      padding: 0.1rem;
-      background: rgba(255,255,255,.8);
-      box-shadow: 0 0 10px 5px rgb(220 220 220 / 30%);
-      -webkit-box-shadow: 0 0 10px 5px rgb(220 220 220 / 30%);
-      position: absolute;
-      top: 0;
-      right: 0.2rem;
-      z-index: 2000;
-    }
-
-    .detail-menu h1, .detail-menu h2, .detail-menu h3, .detail-menu h4, .detail-menu h5, .detail-menu h6 {
+  }
+  /* 侧边导航栏 */
+  .detail-menu{
+    width: 200px;
+    min-width: 20px;
+    min-height: 20px;
+    padding: 10px;
+    background: #fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    display: block;
+    position: absolute;
+    top: 0;
+    right: -120px;
+    z-index: 2000;
+    h1, h2, h3, h4, h5, h6 {
       margin: 2px 0;
       font-weight: 500;
       font-size: 17px;
@@ -335,29 +360,34 @@ export default {
       line-clamp: 2;
       position: relative;
     }
-
-    .detail-menu a{
-      width: 2rem;
-      height: 0.2rem;
+    a{
+      width: calc(100%);
+      height: 20px;
+      display: block;
       position: absolute;
     }
 
-    .detail-menu h2{
-      padding-left: 0.1rem;
+    h2{
+      padding-left: 10px;
     }
-    .detail-menu h3{
-      padding-left: 0.2rem;
+    h3{
+      padding-left: 20px;
     }
-    .detail-menu h4{
-      padding-left: 0.25rem;
+    h4{
+      padding-left: 25px;
     }
-    .detail-menu h5{
-      padding-left: 0.3rem;
+    h5{
+      padding-left: 30px;
     }
-    .detail-menu h6{
-      padding-left: 0.35rem;
+    h6{
+      padding-left: 35px;
     }
   }
+  .isFixed{
+      position: fixed;
+      top: 70px;
+      right: 120px;
+    }
   .artice-comment {
     margin-top: 20px;
     padding: 15px;

@@ -7,7 +7,7 @@
           <el-tab-pane label="首页" name="home">首页</el-tab-pane>
           <el-tab-pane label="新闻" name="news">新闻</el-tab-pane>
           <el-tab-pane label="心情" name="mood">心情</el-tab-pane>
-          <el-tab-pane label="回忆录" name="memoir">回忆录</el-tab-pane>
+          <el-tab-pane label="网站导航" name="site">网站导航</el-tab-pane>
           <el-tab-pane label="平时积累案例" name="case">平时积累案例</el-tab-pane>
         </el-tabs>
       </div>
@@ -34,21 +34,26 @@
         </span>
       </div>
     </nav>
-    <header>
+    <header v-show="bannerShow">
        <banner :site="site"></banner>
     </header>
     <main>
-      <router-view></router-view>
+      <router-view @onSend="onSend"></router-view>  
     </main>
+    <footer>
+      <bottom></bottom>
+    </footer>
   </div>
 </template>
 <script>
 import api from '../utils/api';
 import { setToken, getToken, removeToken} from '../utils/auth'
-import banner from '../template/banner.vue'
+import banner from '../template/banner.vue';
+import bottom from '../template/bottom.vue';
 export default {
   components: {
-    banner
+    banner,
+    bottom
   },
   data() {
     return {
@@ -56,7 +61,8 @@ export default {
       islogin: false,
       userInfo: {},
       site: 'index',
-      activeName: 'home'
+      activeName: 'home',
+      bannerShow: true
     };
   },
   created() {
@@ -64,11 +70,8 @@ export default {
   },
   mounted() {
     this.getUser();
-    
     window.addEventListener("scroll", this.fixedNav);
-    
-    window.addEventListener('hashchange',() => {
-      console.log('hash变化');
+    window.addEventListener('hashchange',(e) => {
     },false);
   },
   methods: {
@@ -122,8 +125,11 @@ export default {
       removeToken('$userid');
       window.location.href= '/'
       this.$router.push({path: '/'});
+    },
+    onSend(e) {
+      this.bannerShow = e;
     }
-  },
+  }
 };
 </script>
 <style lang="scss">
@@ -188,7 +194,7 @@ main {
   .main {
     width: 1200px;
     margin: 0 auto;
-    padding: 20px 0;
+    padding: 20px 0 0 0;
     display: flex;
     .main-left {
       width: 70%;
@@ -199,7 +205,7 @@ main {
     }
   }
   .card {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     background: #fff;
     border-radius: 6px;
     .title {

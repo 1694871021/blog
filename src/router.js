@@ -30,6 +30,7 @@ var router = new Router({
           memuname: '新闻',
           meta: { title: '' }
         },
+
         // {
         //   path: 'mood',
         //   fullPath: 'mood',
@@ -51,6 +52,12 @@ var router = new Router({
         //   memuname: '积累案例',
         //   meta: { title: '' }
         // },
+        {
+          path: "/article",
+          name: "article",
+          component: () =>
+            import("./view/article.vue")
+        },
       ]
     },
     {
@@ -64,12 +71,6 @@ var router = new Router({
       name: "register",
       component: () =>
         import("./view/register.vue")
-    },
-    {
-      path: "/article",
-      name: "article",
-      component: () =>
-        import("./view/article.vue")
     },
     {
       path: '/admin',

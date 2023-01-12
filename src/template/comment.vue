@@ -30,7 +30,7 @@
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-xiaoxi"></use>
             </svg>
-            {{ commentInfo.replynum || 0}}
+            {{commentInfo.subcomment && commentInfo.subcomment.length}}
           </span>
           <span @click="delClick(commentInfo.commentid)">
             <svg class="icon" aria-hidden="true">
@@ -68,10 +68,13 @@ export default {
   },
   methods: {
     tumbsupClick() {
+      // 可用于添加样式
+      //var dom = this.$refs.aaa
+      // dom.classList.add('show')
       api.commentstTumbsup({commentid: this.commentInfo.commentid}).then((res)=>{
         if(res.code == 0) {
           this.commentInfo.likenum +=1;
-          this.dianzanAnimate = !this.dianzanAnimate
+          this.dianzanAnimate = true
         }
       })
     },

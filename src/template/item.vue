@@ -40,7 +40,7 @@ export default {
   font-size: 12px;
   background: #fff;
   padding: 20px 15px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   border-radius: 6px;
   .custom-image {
     width: 230px;
