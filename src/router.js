@@ -30,7 +30,13 @@ var router = new Router({
           memuname: '新闻',
           meta: { title: '' }
         },
-
+        {
+          path: 'site',
+          fullPath: 'site',
+          component: () => import('./view/site.vue'),
+          memuname: '网站导航',
+          meta: { title: '' }
+        },
         // {
         //   path: 'mood',
         //   fullPath: 'mood',

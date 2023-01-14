@@ -90,7 +90,12 @@ function verifyCaptcha(params) {
 // 注册邮箱验证码发送
 function getEmailCode(params) {
   return POST(params, url + '/getEmailCode')
-} 
+}
+
+// 新闻列表
+function getnewList(params) {
+  return POST(params, 'https://api.codelife.cc/api/top/list',{'csrtoken': 'vjHT4afrsEr6owsTHwRKJ0VwE05JpsrVHLOpdbmbeTwsmF8n6rnQPzS0HdI64WBB'});
+}
 
 export default {
   url,
@@ -115,7 +120,8 @@ export default {
   uploadcoverImg,
   uploadHeadSculpture,
   verifyCaptcha,
-  getEmailCode
+  getEmailCode,
+  getnewList
 }
 
 
