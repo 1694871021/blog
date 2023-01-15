@@ -90,17 +90,23 @@ module.exports = {
       vue: 'vue/dist/vue.js'
     }
   },
-  // devServer: {
-  //   open: false,
-  //   host: "127.0.0.1",
-  //   port: 3082,
-  //   proxy: {
-  //     "/apis": {
-  //         target: "http://192.168.0.224:18090", // 接口域名
-  //         ws: true,
-  //         changeOrigin: true // 是否跨域
-  //     }
-  //   }
-  // }
+  devServer: {
+    static: './src/',  // webpack服务器访问入口
+    open: false,
+    host: "localhost",
+    port: 8080,
+    proxy: {
+      "/API": {
+          target: "https://api.iwyu.com", // 接口域名
+          ws: true,
+          changeOrigin: true // 是否跨域
+      },
+      "/api": {
+        target: "https://api.itapi.cn", // 接口域名
+        ws: true,
+        changeOrigin: true // 是否跨域
+      },
+    }
+  },
   mode: 'development', // 开发模式
 }

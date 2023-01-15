@@ -94,7 +94,8 @@ function getEmailCode(params) {
 
 // 新闻列表
 function getnewList(params) {
-  return POST(params, 'https://api.codelife.cc/api/top/list',{'csrtoken': 'vjHT4afrsEr6owsTHwRKJ0VwE05JpsrVHLOpdbmbeTwsmF8n6rnQPzS0HdI64WBB'});
+  // https://api.iwyu.com/API/weibo/ 微博热搜接口
+  return GET(params, '/api/hotnews/all');
 }
 
 export default {
