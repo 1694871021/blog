@@ -98,6 +98,11 @@ function getnewList(params) {
   return GET(params, '/api/hotnews/all');
 }
 
+// 法定节日列表
+function getFestivals(params) {
+  // https://apis.tianapi.com/jiejiari/index?key=7e78d6ba1d8af5438c42d2f3ffcbb366&date=2021-01-01 天行数据
+  return GET(params, '/api.php?query=2020年&resource_id=6018&format=json');
+}
 export default {
   url,
   addArticle,
@@ -122,7 +127,8 @@ export default {
   uploadHeadSculpture,
   verifyCaptcha,
   getEmailCode,
-  getnewList
+  getnewList,
+  getFestivals
 }
 
 

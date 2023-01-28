@@ -101,11 +101,18 @@ module.exports = {
           ws: true,
           changeOrigin: true // 是否跨域
       },
+      "/api.php": {
+        target: "http://opendata.baidu.com", // 接口域名
+        ws: true,
+        changeOrigin: true // 是否跨域
+      },
+
       "/api": {
         target: "https://api.itapi.cn", // 接口域名
         ws: true,
         changeOrigin: true // 是否跨域
       },
+
     }
   },
   mode: 'development', // 开发模式
