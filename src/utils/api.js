@@ -40,6 +40,12 @@ const commentstTumbsup = (params) =>{
 const commentsDel = (params) =>{
   return POST(params,url + '/users/commentsDel')
 }
+const postdianzan = (params) =>{
+  return POST(params,url + '/users/postdianzan')
+}
+const postshoucang = (params) =>{
+  return POST(params,url + '/users/postshoucang')
+}
 
 // 用户信息
 const setUserInfo = (params) =>{
@@ -101,7 +107,7 @@ function getnewList(params) {
 // 法定节日列表
 function getFestivals(params) {
   // https://apis.tianapi.com/jiejiari/index?key=7e78d6ba1d8af5438c42d2f3ffcbb366&date=2021-01-01 天行数据
-  return GET(params, '/api.php?query=2020年&resource_id=6018&format=json');
+  return GET(params, '/jiejiari/index');
 }
 export default {
   url,
@@ -114,6 +120,8 @@ export default {
   getCommentsList,
   commentstTumbsup,
   commentsDel,
+  postdianzan,
+  postshoucang,
   setUserInfo,
   getUserInfo,
   setBannerImage,

@@ -112,7 +112,11 @@ module.exports = {
         ws: true,
         changeOrigin: true // 是否跨域
       },
-
+      "/jiejiari": {
+        target: "https://apis.tianapi.com", // 接口域名
+        ws: true,
+        changeOrigin: true // 是否跨域
+      },
     }
   },
   mode: 'development', // 开发模式

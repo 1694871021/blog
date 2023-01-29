@@ -101,13 +101,14 @@ export default {
       localStorage.setItem("theme", theme);
     },
     getUser() {
-      if(this.$store.state.userInfo.userid) {
-        this.userInfo = this.$store.state.userInfo;
-        this.islogin = true;
-      } else if (getToken('$userid')){
-        this.$store.commit('setuserInfo', {username: getToken('$username'), avatar: getToken('$avatar'), userid: getToken('$userid')});
-        this.userInfo = this.$store.state.userInfo;
-        this.islogin = true;
+      if (getToken('$userid')) {
+        api.getUserInfo({userid: getToken('$userid')}).then((res)=>{
+          if(res.code == 0) {
+            this.$store.commit('setuserInfo', res.data);
+            this.userInfo = res.data;
+            this.islogin = true;
+          }
+        })
       }
     },
     fixedNav (e) {

@@ -28,27 +28,17 @@
     <div class="main-right">
       <div  class="card wow slideInUp" data-wow-duration="2s" data-wow-iteration="1" data-wow-offset="0">
         <div class="card-title">
-          <h3>天气预告</h3>
-          <div>
-          </div>
-        </div>
-        <div class="card-content">
-          <div  id="he-plugin-standard"></div>
-        </div>
-      </div>
-      <div  class="card wow slideInUp" data-wow-duration="2s" data-wow-iteration="1" data-wow-offset="0">
-        <div class="card-title">
           <h3>时间预告</h3>
           <div>
           </div>
         </div>
-        <div class="card-content">
-          <div class="festival-left">
+        <div class="card-content clearfix">
+          <div class="festival-left fl">
             <!-- <h2>下班还有</h2>
             <h2 class="time-nowork">02:00:28</h2> -->
             <el-statistic class="time-nowork" ref="statistic" @finish="hilarity" format="HH:mm:ss" :value="time1" title="离下班还有" time-indices > </el-statistic>
             <ul class="clearfix">
-              <li>
+              <li title="每月10号发工资">
                 <p>发薪</p>
                 <p>{{ time2 }}</p>
                 <p>天</p>
@@ -58,15 +48,28 @@
                 <p>{{ time3 }}</p>
                 <p>天</p>
               </li>
-              <li>
+              <li :title="festivalsTip">
                 <p class="d-elip" style="text-overflow: inherit;">{{ festivals }}</p>
                 <p>
-                  <el-statistic class="time-festivals" ref="statistic1" format="DD" :value="time4" title="" time-indices > </el-statistic>
+                  <el-statistic class="time-festivals" ref="statistic1" format="DD" @finish="hilarity1" :value="time4" title="" time-indices > </el-statistic>
                 </p>
                 <p>天</p>
               </li>
             </ul>
           </div>
+          <div class="festival-right fl">
+            <img src="../static/images/adc1b2e19d514c8a5923d555b754d892.jpg" alt="">
+          </div>
+        </div>
+      </div>
+      <div  class="card wow slideInUp" data-wow-duration="2s" data-wow-iteration="1" data-wow-offset="0">
+        <div class="card-title">
+          <h3>天气预告</h3>
+          <div>
+          </div>
+        </div>
+        <div class="card-content">
+          <div  id="he-plugin-standard"></div>
         </div>
       </div>
       <div  class="card wow slideInUp" data-wow-duration="2s" data-wow-iteration="1" data-wow-offset="0">
@@ -95,6 +98,8 @@
 <script>
 import items from '../template/item.vue'
 import api from '../utils/api';
+import moment from 'moment';
+var Inter;
 export default {
   components: {
     items
@@ -106,7 +111,14 @@ export default {
       // 发工资定为每个月10号
       if(t.getDate() > 10) {
         return t1 + 10 - t.getDate();
-      } else {
+      } else if (t.getDate() < 10){
+        return 10 - t1;
+      } else if (t.getDate() == 10){
+        this.$notify({
+          title: '提示',
+          message: '发工资了，开不开心？',
+          duration: 0
+        });
         return 10 - t1;
       }
     }
@@ -132,8 +144,9 @@ export default {
           case 6:
           week = '周六'
           break;
-          case 7:
+          case 0:
           week = '周日'
+          
           break;
         default:
           break;
@@ -146,10 +159,13 @@ export default {
       currentPage: 1,
       time1: Date.now() + (new Date().setHours(17,59,59)-Date.now()),
       time2: time2(),
-      time3: new Date().getDay(),
+      time3: new Date().getDay() || 7,
       time4: Date.now() + (new Date('2023-06-05') - Date.now()),
       week: time3(),
-      festivals: ''
+      festivals: '',
+      festivalsTip: '',
+
+      counTime: "00:00:00",
     }
   },
   mounted() {
@@ -173,9 +189,54 @@ export default {
     sn.parentNode.insertBefore(c, sn)
     sn.parentNode.insertBefore(s, sn)
     this.getList();
-    this.getFestivals()
+    this.getFestivals();
+
+    // 倒计时 YYYY-MM-DD hh:mm:ss
+    // var _this = this;
+    // Inter  = setInterval(function(){ //设置定时器
+    //   _this.timeArray(_this.endTime)
+    // },1000)
+    // _this.timeArray('2023-01-31')
   },
   methods: {
+    timeArray(time){
+      let that = this;
+      let diff = moment(time, 'YYYY-MM-DD hh:mm:ss').diff(moment(), "seconds"); //对比两个时间差距，获得相差的秒数
+      if (diff <= 0) { //如果两个时间没有差距
+          clearInterval(Inter) //清除定时器
+          that.counTime = "00:00:00"
+          return "00:00:00";
+      }
+      
+      let days = parseInt(diff / (3600 * 24)); //根据获得的秒数计算有多少天
+      diff = diff - days * 3600 * 24;
+      let hour = parseInt(diff / 3600); //根据获得的秒数计算有多少小时
+      diff = diff - hour * 3600;
+      let minute = parseInt(diff / 60); //根据获得的秒数计算有多少分钟
+      let second = diff - 60 * minute;
+      
+      if (days < 10) {
+          days = "0" + days;
+      }
+      
+      if (hour < 10) {
+          hour = "0" + hour;
+      }
+      
+      if (minute < 10) {
+          minute = "0" + minute;
+      }
+      
+      if (second < 10) {
+          second = "0" + second;
+      }
+      
+      if (days == '00') {
+          that.counTime = hour + ":" + minute + ":" + second
+      } else {
+          that.counTime = days + "天 " + hour + ":" + minute + ":" + second
+      }
+    },
     getList(){
       api.getRecommendList({page: this.currentPage, pagesize: 10}).then((res) => {
         if (res && res.code == 0) {
@@ -192,10 +253,24 @@ export default {
       this.getList();
     },
     getFestivals() {
-      api.getFestivals().then((res) => {
-        console.log(111, res)
-        if (res && res.code == 0) {
-          
+      let date = new Date();
+      let year = date.getFullYear();
+      let nowtime = date.getTime();
+      api.getFestivals({key: '7e78d6ba1d8af5438c42d2f3ffcbb366', type: 1, date: year}).then((res) => {
+        if (res && res.code == 200) {
+          let list = res.result.list
+          list.forEach((element, index) => {
+            if(nowtime < new Date(element.wage.split('|')[0]).getTime()) {
+              if(list[index - 1] &&  nowtime > new Date(list[index - 1].wage.split('|')[0])) {
+                this.time4 = Date.now() + (new Date(element.wage.split('|')[0]) - Date.now()) + 24*60*60*1000;
+                this.festivals = element.name;
+                this.festivalsTip = element.tip;
+                if(new Date(element.wage.split('|')[0]) - Date.now() < 0) {
+                  this.hilarity1()
+                }
+              }
+            }
+          });
         }
       });
     },
@@ -203,6 +278,13 @@ export default {
       this.$notify({
         title: '提示',
         message: '时间已到，还不下班吗？',
+        duration: 0
+      });
+    },
+    hilarity1() {
+      this.$notify({
+        title: '提示',
+        message: '假期到了，不休息吗？',
         duration: 0
       });
     },
@@ -316,13 +398,22 @@ export default {
     margin-right:6px;
     background-color:#6666661f;
     font-size: 13px;
-    padding:6px 14px;;
+    padding:6px 12px;;
     text-align: center;
+    cursor: pointer;
     float: left;
     display:flex;
     flex-direction:column;
     justify-content:space-around;
-    
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+.festival-right {
+  width: 40%;
+  img {
+    width: 100%;
   }
 }
 .time-nowork {

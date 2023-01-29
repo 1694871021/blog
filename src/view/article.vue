@@ -33,7 +33,28 @@
           />
         </div>                           
       </div>
-      <div class="detail-menu" :class="{isFixed}" v-show="menuContent" v-html="markData.menu"></div>
+      <div class="datail-right" :class="{isFixed}">
+        <div class="detail-menu" v-show="menuContent" v-html="markData.menu"></div>
+        <div class="detail-right-box">
+          <div @click="dianzanClick">
+            <i class="iconfont icon-dianzan" v-show="!isdianzan"></i>
+            <svg class="icon" aria-hidden="true" v-show="isdianzan">
+              <use xlink:href="#icon-dianzan1"></use>
+            </svg>
+            {{ markData.dianzan }}
+          </div>
+          <div @click="shoucangClick">
+            <i class="iconfont icon-shoucang" v-show="!isshoucang"></i>
+            <svg class="icon" aria-hidden="true" v-show="isshoucang">
+              <use xlink:href="#icon-jiaxingshoucangtianchong"></use>
+            </svg>
+            {{ markData.shoucang }}
+          </div>
+          <div @click="xiangshangzhanhangClick">
+            <i class="iconfont icon-xiangshangzhanhang"></i>
+          </div>
+        </div>
+      </div>
       <!-- 评论一下 -->
       <div class="artice-comment">
         <h4>评论一下</h4>
@@ -82,6 +103,8 @@ export default {
         view: '0',
         commentary: '0',
         like: '0',
+        dianzan: 0,
+        shoucang: 0,
         content:  '',
       },
       menuContent: '',
@@ -95,7 +118,10 @@ export default {
       subCommentShow: false,
       replyusername: '', //点击子评论回复时对应的用户名
       subCommentrow: 1,
-      subCommentbtn: false
+      subCommentbtn: false,
+
+      isdianzan: false,
+      isshoucang: false
     }
   },
   components: {
@@ -107,6 +133,10 @@ export default {
     this.getDetails();
     // 评论接口
     this.getCommentsList();
+    let userInfo = this.$store.state.userInfo;
+    if(userInfo.sclist && userInfo.sclist.indexOf(this.articleId)) {
+      this.isshoucang = true;
+    }
     document.addEventListener('scroll', this.handleScroll)
   },
   beforeDestroy() {
@@ -247,7 +277,6 @@ export default {
       gopage.forEach((item,index) => {
         item.addEventListener('click', function(){
           gopage1.forEach((gitem,gindex)=>{
-            console.log(3333333333333, gitem.id, item.id)
             if(gitem.id == item.id){
               if(gitem.offsetTop > 0){
                 var y = gitem.offsetTop + gopage3.offsetHeight - 50;
@@ -258,10 +287,58 @@ export default {
         })
       }) 
     },
+    dianzanClick() {
+      api.postdianzan({articleId: this.articleId, dianzan: !this.isdianzan}).then((res)=>{
+        if(res.code == 0) {
+          if(!this.isdianzan) {
+            this.markData.dianzan += 1
+          } else {
+            this.markData.dianzan -= 1
+          }
+          this.isdianzan = !this.isdianzan
+        }
+      })
+    },
+    shoucangClick() {
+      if(!this.$store.getters.getuserId) {
+        this.$message({
+          type: 'warning',
+          message: '还未登录，请先进行登录！'
+        })
+        return
+      }
+      api.postshoucang({articleId: this.articleId, shoucang: !this.isshoucang}).then((res)=>{
+        if(res.code == 0) {
+          if(!this.isshoucang) {
+            this.markData.shoucang += 1
+          } else {
+            this.markData.shoucang -= 1
+          }
+          this.isshoucang = !this.isshoucang
+          this.$message({
+            type: 'success',
+            message: res.message
+          })
+        }
+      })
+    },
+    xiangshangzhanhangClick() {
+      var timer = null;
+      cancelAnimationFrame(timer);
+      timer = requestAnimationFrame(function fn(){
+        var oTop = document.body.scrollTop || document.documentElement.scrollTop;
+        if(oTop > 0){
+          document.body.scrollTop = document.documentElement.scrollTop = oTop - 80;
+          timer = requestAnimationFrame(fn);
+        }else{
+          cancelAnimationFrame(timer);
+        } 
+      });
+    },
     handleScroll() {
       //获取滚动时的高度
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
-      if (scrollTop > 760) {
+      if (scrollTop > 660) {
         this.isFixed = true
       }else{
         this.isFixed = false
@@ -332,62 +409,89 @@ export default {
     }
   }
   /* 侧边导航栏 */
-  .detail-menu{
-    width: 200px;
-    min-width: 20px;
-    min-height: 20px;
-    padding: 10px;
-    background: #fff;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-    border-radius: 6px;
-    display: block;
+  .datail-right {
     position: absolute;
     top: 0;
     right: -120px;
     z-index: 2000;
-    h1, h2, h3, h4, h5, h6 {
-      margin: 2px 0;
-      font-weight: 500;
-      font-size: 17px;
-      color: #2185d0;
-      border-bottom: none;
-      cursor: pointer;
-      line-height: normal;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      -webkit-line-clamp: 2;
-      line-clamp: 2;
-      position: relative;
-    }
-    a{
-      width: calc(100%);
-      height: 20px;
+    .detail-menu{
+      width: 200px;
+      min-width: 20px;
+      min-height: 20px;
+      padding: 10px;
+      background: #fff;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      border-radius: 6px;
       display: block;
-      position: absolute;
-    }
+      transition: all 1s;
+      h1, h2, h3, h4, h5, h6 {
+        margin: 2px 0;
+        font-weight: 500;
+        font-size: 17px;
+        color: #2185d0;
+        border-bottom: none;
+        cursor: pointer;
+        line-height: normal;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        position: relative;
+      }
+      a{
+        width: calc(100%);
+        height: 20px;
+        display: block;
+        position: absolute;
+      }
 
-    h2{
-      padding-left: 10px;
+      h2{
+        padding-left: 10px;
+      }
+      h3{
+        padding-left: 20px;
+      }
+      h4{
+        padding-left: 25px;
+      }
+      h5{
+        padding-left: 30px;
+      }
+      h6{
+        padding-left: 35px;
+      }
     }
-    h3{
-      padding-left: 20px;
-    }
-    h4{
-      padding-left: 25px;
-    }
-    h5{
-      padding-left: 30px;
-    }
-    h6{
-      padding-left: 35px;
+    .detail-right-box {
+      >div {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: #fff;
+        margin: 20px auto 0;
+        font-size: 13px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+      }
+      .iconfont {
+        font-size: 26px;
+      }
+      .icon {
+        font-size: 30px;
+      }
     }
   }
+  
   .isFixed{
-      position: fixed;
-      top: 70px;
-      right: 120px;
-    }
+    position: fixed;
+    top: 70px;
+    right: 120px;
+  }
+
   .artice-comment {
     margin-top: 20px;
     padding: 15px;
