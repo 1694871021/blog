@@ -1,10 +1,8 @@
 import { GET, POST, LOAD, http } from './request.js';
 
-export let url = 'http://127.0.0.1:3001';
-// 获取token
-function getTempToken(params) {
-  return POST(params, '/crm/auth/getToken.do')
-}
+// export let url = 'http://127.0.0.1:3001'; //开发环境
+
+export let url = 'http://47.243.61.198:3001'; //生成环境
 
 // 添加文章
 const addArticle = (params) =>{
@@ -46,6 +44,7 @@ const postdianzan = (params) =>{
 const postshoucang = (params) =>{
   return POST(params,url + '/users/postshoucang')
 }
+
 
 // 用户信息
 const setUserInfo = (params) =>{
@@ -106,7 +105,8 @@ function getnewList(params) {
 
 // 法定节日列表
 function getFestivals(params) {
-  // https://apis.tianapi.com/jiejiari/index?key=7e78d6ba1d8af5438c42d2f3ffcbb366&date=2021-01-01 天行数据
+  // http://opendata.baidu.com/api.php?query=2020年&resource_id=6018&format=json 百度数据 节假日数据接口
+  // https://apis.tianapi.com/jiejiari/index?key=7e78d6ba1d8af5438c42d2f3ffcbb366&date=2021-01-01 天行数据 节假日数据接口
   return GET(params, '/jiejiari/index');
 }
 export default {

@@ -28,7 +28,7 @@
     <div class="main-right">
       <div  class="card wow slideInUp" data-wow-duration="2s" data-wow-iteration="1" data-wow-offset="0">
         <div class="card-title">
-          <h3>时间预告</h3>
+          <h3>节日预告</h3>
           <div>
           </div>
         </div>
@@ -111,14 +111,7 @@ export default {
       // 发工资定为每个月10号
       if(t.getDate() > 10) {
         return t1 + 10 - t.getDate();
-      } else if (t.getDate() < 10){
-        return 10 - t1;
-      } else if (t.getDate() == 10){
-        this.$notify({
-          title: '提示',
-          message: '发工资了，开不开心？',
-          duration: 0
-        });
+      } else {
         return 10 - t1;
       }
     }

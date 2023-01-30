@@ -113,7 +113,7 @@ module.exports = {
         changeOrigin: true // 是否跨域
       },
       "/jiejiari": {
-        target: "https://apis.tianapi.com", // 接口域名
+        target: "https://apis.tianapi.com", // 天行数据 节假日域名
         ws: true,
         changeOrigin: true // 是否跨域
       },

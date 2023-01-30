@@ -20,7 +20,7 @@
         </el-form-item>
         <el-form-item label="" prop="code" label-width="20px" class="pass-code">
           <el-input v-model="ruleForm.code"  placeholder="请输入验证码"></el-input>
-          <img src="http://127.0.0.1:3001/getCaptcha" alt="点击获取验证码" class="code-image" ref="codeImg" @click="getCode">
+          <img :src="url + '/getCaptcha'" alt="点击获取验证码" class="code-image" ref="codeImg" @click="getCode">
         </el-form-item>
         <el-form-item  class="login-btn">
           <el-button type="primary" @click="submitForm('ruleForm')">立即登录</el-button>
@@ -38,7 +38,7 @@
         </svg>
       </div>
       <div class="bottom-image">
-        <img src="../static/images/qeqeqw20221226141936.png" alt="">
+        <img src="../static/images/c6064c3cffb086f20b3ede738184432b.jpeg" alt="">
       </div>
     </div>
   </div>
@@ -73,6 +73,7 @@ export default {
       }
     }
     return {
+      url: url,
       ruleForm: {
         email: '',
         password: '',
