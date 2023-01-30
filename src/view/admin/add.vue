@@ -169,10 +169,11 @@ export default {
     $imgAdd(pos, $file){
       var formData = new FormData();
       //创建formdata对象
-      formData.append("test",$file);
-      api.upload(formData).then(res => {
+      formData.append("cover",$file);
+      formData.uploadType = 4;
+      api.uploadImg(formData).then(res => {
         if(res && res.code == 0){
-          var imgUrl = 'http://127.0.0.1:3001' + res.data;
+          var imgUrl = url + res.data;
           this.$refs.md.$img2Url(pos, imgUrl);
         }else {
 
@@ -202,11 +203,12 @@ export default {
       this.inputValue = '';
     },
 
-    // 图片上传
+    // 上传文章封面图
     uploadCover(file) {
       var formData = new FormData();
       formData.append("cover",file.file);
-      api.uploadcoverImg(formData).then(res => {
+      formData.uploadType = 2;
+      api.uploadImg(formData).then(res => {
         if(res && res.code == 0){
           this.$message({
             type: "success",

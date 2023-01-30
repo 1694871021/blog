@@ -119,5 +119,5 @@ module.exports = {
       },
     }
   },
-  mode: 'development', // 开发模式
+  mode: 'production', // 开发模式
 }

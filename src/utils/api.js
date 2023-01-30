@@ -1,8 +1,8 @@
 import { GET, POST, LOAD, http } from './request.js';
 
-// export let url = 'http://127.0.0.1:3001'; //开发环境
+export let url = 'http://127.0.0.1:3001'; //开发环境
 
-export let url = 'http://47.243.61.198:3001'; //生成环境
+// export let url = 'http://47.243.61.198:3001'; //生成环境
 
 // 添加文章
 const addArticle = (params) =>{
@@ -71,17 +71,9 @@ const register = (params) =>{
 }
 
 // 上传文章图片
-function upload(params) {
+function uploadImg(params) {
   return LOAD(params, url + '/uploadImg', {'Content-Type': 'multipart/form-data'})
 } 
-// 上传封面图片
-function uploadcoverImg(params) {
-  return LOAD(params, url + '/uploadcoverImg', {'Content-Type': 'multipart/form-data'})
-} 
-function uploadHeadSculpture(params) {
-  return LOAD(params, url + '/uploadHeadSculpture', {'Content-Type': 'multipart/form-data'})
-} 
-
 
 // 获取验证码
 function getCaptcha(params) {
@@ -107,7 +99,7 @@ function getnewList(params) {
 function getFestivals(params) {
   // http://opendata.baidu.com/api.php?query=2020年&resource_id=6018&format=json 百度数据 节假日数据接口
   // https://apis.tianapi.com/jiejiari/index?key=7e78d6ba1d8af5438c42d2f3ffcbb366&date=2021-01-01 天行数据 节假日数据接口
-  return GET(params, '/jiejiari/index');
+  return GET(params, 'https://apis.tianapi.com/jiejiari/index');
 }
 export default {
   url,
@@ -130,9 +122,7 @@ export default {
   register,
 
   getCaptcha,
-  upload,
-  uploadcoverImg,
-  uploadHeadSculpture,
+  uploadImg,
   verifyCaptcha,
   getEmailCode,
   getnewList,

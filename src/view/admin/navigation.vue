@@ -191,8 +191,8 @@ export default {
     uploadCover1(file) {
       var formData = new FormData();
       formData.append("cover",file.file);
-      formData.uploadType = '2';
-      api.uploadHeadSculpture(formData).then(res => {
+      formData.uploadType = 1;
+      api.uploadImg(formData).then(res => {
         if(res && res.code == 0){
           this.fileList.push({
             name: file.name,
