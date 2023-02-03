@@ -11,8 +11,8 @@ import mavonEditor from 'mavon-editor';
 import 'mavon-editor/dist/css/index.css';
 
 // 动画插件
-import { WOW } from './static/js/wow.min.js';
-import animated from './static/css/animate.min.css';
+// import { WOW } from 'wowjs';
+// import animated from './assets/css/animate.min.css';
 
 // 图片放大器
 import Viewer from 'v-viewer'
@@ -24,17 +24,16 @@ import 'viewerjs/dist/viewer.css'
 // 	<!--<img src="/图片的路径" />-->
 // </div>
 
-Vue.use(mavonEditor)
 Vue.use(ElementUI)
-
-Vue.use(animated)
-Vue.prototype.$wow = new WOW({
-    boxClass: 'wow', // 需要执行动画的元素的 class
-    animateClass: 'animated', //animation.css 动画的 class
-    offset: 0, // 距离可视区域多少开始执行动画
-    mobile: true, // 是否在移动设备上执行动画
-    live: true, // 异步加载的内容是否有效
-})
+Vue.use(mavonEditor)
+// Vue.use(animated)
+// Vue.prototype.$wow = new WOW({
+//     boxClass: 'wow', // 需要执行动画的元素的 class
+//     animateClass: 'animated', //animation.css 动画的 class
+//     offset: 0, // 距离可视区域多少开始执行动画
+//     mobile: true, // 是否在移动设备上执行动画
+//     live: true, // 异步加载的内容是否有效
+// })
 
 Vue.use(Viewer)
 Viewer.setDefaults({

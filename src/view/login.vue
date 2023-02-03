@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <div class="login-image">
-      <img style="width: 100%;" src="../static/images/c6064c3cffb086f20b3ede738184432b.jpeg" alt="">
+      <img style="width: 100%;" src="../assets/images/c6064c3cffb086f20b3ede738184432b.jpeg" alt="">
     </div>
     <div class="login-box">
       <div class="login-title">
@@ -37,9 +37,9 @@
             <use xlink:href="#icon-weixinmw"></use>
         </svg>
       </div>
-      <div class="bottom-image">
-        <img src="../static/images/c6064c3cffb086f20b3ede738184432b.jpeg" alt="">
-      </div>
+      <!-- <div class="bottom-image">
+        <img src="../assets/images/c6064c3cffb086f20b3ede738184432b.jpeg" alt="">
+      </div> -->
     </div>
   </div>
 </template>

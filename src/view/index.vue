@@ -84,18 +84,18 @@ export default {
       let element = document.createElement("link");
       element.setAttribute("id", "theme");
       element.setAttribute("rel", "stylesheet");
-      element.setAttribute("href", "../static/css/" + theme + ".css");
+      element.setAttribute("href", require("../assets/css/" + theme + ".css"));
       document.head.appendChild(element);
     },
     setTheme (theme) {
       var element = document.getElementById("theme") || "";
       if (element) {
-        element.setAttribute("href", "../static/css/" + theme + ".css");
+        element.setAttribute("href", require("../assets/css/" + theme + ".css"));
       } else {
         element = document.createElement("link");
         element.setAttribute("id", "theme");
         element.setAttribute("rel", "stylesheet");
-        element.setAttribute("href", "../static/css/" + theme + ".css");  
+        element.setAttribute("href", require("../assets/css/" + theme + ".css"));  
         document.head.appendChild(element);
       }
       localStorage.setItem("theme", theme);

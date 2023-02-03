@@ -1,11 +1,17 @@
 <template>
   <div class="swiper">
-    <div class="swiper-item" v-for="(item, index) in swiperInfo.filelist" :key="item.url" :ref="index">
-      <img :src="item" alt="" srcset="" />
+    <div v-if="swiperInfo.filelist.length">
+      <div class="swiper-item" v-for="(item, index) in swiperInfo.filelist" :key="item.url" :ref="index">
+        <img :src="item.url" alt="" srcset="" />
+      </div>
+    </div>
+    <div class="swiper-item" v-else>
+      <img src="../assets/images/src=http___img-baofun.zhhainiao.com_fs_9c496c76d67ba31e96a9e1e771d672e0.jpg&refer=http___img-baofun.zhhainiao.png" alt="" srcset="" />
     </div>
   </div>
 </template>
 <script>
+import api from '@/utils/api';
 export default {
   props: {
     site: {
@@ -16,30 +22,27 @@ export default {
     return {
       swiperIndex: 0,
       swiperInfo: {
-        filelist:[
-          "../static/images/57ece79847ae9ba02d62a92b39685cfc.jpg",
-          "../static/images/c6064c3cffb086f20b3ede738184432b.jpeg "
-        ],
+        filelist:[],
         isswitch: true,
         switchtime: 3
       }
     }
   },
-  watch: {
-    site(val) {
-      // this.getbannerInfo(val)
-    }
-  },
   mounted(){
-    this.initSwiper(this.swiperInfo.isswitch, this.swiperInfo.switchtime)
+    // this.initSwiper(this.swiperInfo.isswitch, this.swiperInfo.switchtime)
+    var site = this.$route.path.replace('/', '');
+    this.getbannerInfo(site)
   },
   methods: {
-    getbannerInfo (val) {
-      api.getbannerInfo({ site: val, userid: this.$store.getters.getuserId }).then(res => {
+    getbannerInfo (site) {
+      var t = this;
+      api.getbannerInfo({ site: site, userid: this.$store.getters.getuserId }).then(res => {
         if (res && res.code == 0) {
-          this.swiperInfo = res.data;
-          this.swiperInfo.filelist = JSON.parse(res.data.filelist);
-          this.initSwiper(this.swiperInfo.isswitch, this.swiperInfo.switchtime)
+          t.swiperInfo = res.data[0];
+          t.swiperInfo.filelist = JSON.parse(res.data[0].filelist);
+          t.$nextTick(function(){
+            t.initSwiper(t.swiperInfo.isswitch, t.swiperInfo.switchtime)
+          })
         }
       });
     },
@@ -48,7 +51,7 @@ export default {
       let swiperEle = document.querySelectorAll(".swiper-item");
       let len = swiperEle.length;
       let timer = null;
-      if(!rotation || this.swiperInfo.filelist.length == 1) return;
+      if(!JSON.parse(rotation) || this.swiperInfo.filelist.length <= 1) return;
       clearInterval(timer);
       timer = setInterval(function () {
         _this.swiperIndex++;

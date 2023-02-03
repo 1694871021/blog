@@ -59,6 +59,13 @@ const setBannerImage = (params) =>{
 const getBannerList = (params) =>{
   return POST(params,url + '/getBannerList')
 }
+const getbannerInfo = (params) =>{
+  return POST(params,url + '/getbannerInfo')
+}
+const delbannerInfo = (params) =>{
+  return POST(params,url + '/delbannerInfo')
+}
+
 
 
 // 登录
@@ -75,6 +82,14 @@ function uploadImg(params) {
   return LOAD(params, url + '/uploadImg', {'Content-Type': 'multipart/form-data'})
 } 
 
+function delImg(params) {
+  return POST(params, url + '/delImg')
+}
+
+function undateImg(params) {
+  return POST(params, url + '/undateImg')
+}
+
 // 获取验证码
 function getCaptcha(params) {
   return GET(params, url + '/getCaptcha')
@@ -90,10 +105,17 @@ function getEmailCode(params) {
 }
 
 // 新闻列表
+// function getnewList(params) {
+//   return GET(params, '/api/hotnews/all');
+// }
+// https://api.iwyu.com/API/weibo 微博热搜接口
+// https://api.iwyu.com/API/baiduresou 百度热搜
+// https://api.iwyu.com/API/douyinrm 抖音热搜
+// https://api.iwyu.com/API/toutiao 头条热搜
 function getnewList(params) {
-  // https://api.iwyu.com/API/weibo/ 微博热搜接口
-  return GET(params, '/api/hotnews/all');
+  return GET(params, 'https://api.iwyu.com/API/weibo', {'Access-Control-Allow-Origin': 'localhost:8080'});
 }
+
 
 // 法定节日列表
 function getFestivals(params) {
@@ -118,11 +140,15 @@ export default {
   getUserInfo,
   setBannerImage,
   getBannerList,
+  getbannerInfo,
+  delbannerInfo,
   login,
   register,
 
   getCaptcha,
   uploadImg,
+  delImg,
+  undateImg,
   verifyCaptcha,
   getEmailCode,
   getnewList,

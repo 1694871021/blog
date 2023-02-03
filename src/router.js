@@ -2,11 +2,11 @@ import Router from 'vue-router';
 import Vue from 'vue';
 Vue.use(Router);
 
-export const errorHtml = {
-  path: '*',
-  memuname: '*',
-  redirect: '/404'
-}
+// export const errorHtml = {
+//   path: '*',
+//   memuname: '*',
+//   redirect: '/404'
+// }
 var router = new Router({
   mode: 'hash',
   routes: [
@@ -19,6 +19,7 @@ var router = new Router({
         {
           path: 'home',
           fullPath: 'home',
+          site: 'home',
           component: () => import('./view/home.vue'),
           memuname: '首页',
           meta: { title: '' }
@@ -26,6 +27,7 @@ var router = new Router({
         {
           path: 'news',
           fullPath: 'news',
+          site: 'news',
           component: () => import('./view/news.vue'),
           memuname: '新闻',
           meta: { title: '' }
@@ -33,6 +35,7 @@ var router = new Router({
         {
           path: 'site',
           fullPath: 'site',
+          site: 'site',
           component: () => import('./view/site.vue'),
           memuname: '网站导航',
           meta: { title: '' }
@@ -40,6 +43,7 @@ var router = new Router({
         // {
         //   path: 'mood',
         //   fullPath: 'mood',
+            //  site: 'mood',
         //   component: () => import('@view/mood.vue'),
         //   memuname: '心情',
         //   meta: { title: '' }
@@ -47,6 +51,7 @@ var router = new Router({
         // {
         //   path: 'memoir',
         //   fullPath: 'memoir',
+          // site: 'memoir',
         //   component: () => import('@view/memoir.vue'),
         //   memuname: '回忆录',
         //   meta: { title: '' }
@@ -54,6 +59,7 @@ var router = new Router({
         // {
         //   path: 'case',
         //   fullPath: 'case',
+              // site: 'case',
         //   component: () => import('@view/case.vue'),
         //   memuname: '积累案例',
         //   meta: { title: '' }
@@ -82,7 +88,7 @@ var router = new Router({
       path: '/admin',
       component: () => import("./view/admin/admin.vue"),
       name: 'admin',
-      iconCls: 'el-icon-message',//图标样式class
+      iconCls: '',//图标样式class
       children: [
           {path: '/admin/list', iconCls:'el-icon-s-data', component: () => import("./view/admin/list.vue"), name: '文章列表'},
           {path: '/admin/add', iconCls:'el-icon-plus', component: () => import("./view/admin/add.vue"), name: '添加文章'},

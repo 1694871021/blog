@@ -6,7 +6,7 @@
       </el-col>
       <el-col :span="10">
         <div class="tools" @click.prevent="collapse">
-          <i class="fa fa-align-justify"></i>
+          <!-- <i class="fa fa-align-justify"></i> -->
         </div>
       </el-col>
       <el-col :span="4" class="userinfo">
@@ -24,7 +24,7 @@
         </el-dropdown>
       </el-col>
     </el-col>
-    <el-col :span="24" class="main">
+    <el-col :span="24" class="main-nav">
       <aside :class="collapsed ? 'menu-collapsed' : 'menu-expanded'">
         <!--导航菜单-->
         <el-menu
@@ -38,7 +38,7 @@
           v-show="!collapsed"
         >
           <template v-for="(item, index) in $router.options.routes">
-            <el-submenu :index="index + ''" v-if="!item.leaf && item.name == 'admin'"  v-bind:key="item.path">
+            <el-submenu class="firist-title" :index="index + ''" v-if="!item.leaf && item.name == 'admin'"  v-bind:key="item.path">
               <template slot="title"><i :class="item.iconCls"></i>{{ item.name }}</template>
               <el-menu-item v-for="child in item.children" :index="child.path" :key="child.path">{{ child.name }}</el-menu-item>
             </el-submenu>
@@ -116,7 +116,6 @@ export default {
     };
   },
   mounted() {
-    console.log(55555555555555555 ,this.$store.state.userInfo)
     this.userInfo = this.$store.state.userInfo;
   },
   methods: {
@@ -211,7 +210,7 @@ export default {
 }
 
 .container .header .logo-width {
-  width: 150px;
+  width: 200px;
 }
 
 .container .header .logo-collapse-width {
@@ -226,7 +225,7 @@ export default {
   cursor: pointer;
 }
 
-.container .main {
+.container .main-nav {
   display: flex;
   position: absolute;
   top: 60px;
@@ -234,23 +233,24 @@ export default {
   overflow: hidden;
 }
 
-.container .main aside {
-  width: 150px;
+.container .main-nav aside {
+  width: 200px;
 }
 
-.container .main .el-menu {
+.container .main-nav .el-menu {
   height: 100%;
+  background-color: #282829;
 }
 
-.container .main .collapsed {
+.container .main-nav .collapsed {
   width: 60px;
 }
 
-.container .main .collapsed .item {
+.container .main-nav .collapsed .item {
   position: relative;
 }
 
-.container .main .collapsed .submenu {
+.container .main-nav .collapsed .submenu {
   position: absolute;
   top: 0px;
   left: 60px;
@@ -259,31 +259,31 @@ export default {
   display: none;
 }
 
-.container .main .menu-collapsed {
+.container .main-nav .menu-collapsed {
   flex: 0 0 60px;
   width: 60px;
 }
-.container .main .menu-expanded {
-  width: 150px;
-}
-.container .main .content-container {
+
+.container .main-nav .content-container {
   flex: 1;
   overflow-y: scroll;
   padding: 20px;
+  background: var(--main-bg);
 }
 
-.container .main .content-container .breadcrumb-container .title {
+.container .main-nav .content-container .breadcrumb-container .title {
   width: 200px;
   float: left;
   color: #475669;
 }
 
-.container .main .content-container .breadcrumb-container .breadcrumb-inner {
+.container .main-nav .content-container .breadcrumb-container .breadcrumb-inner {
   float: right;
 }
 
-.container .main .content-container .content-wrapper {
+.container .main-nav .content-container .content-wrapper {
   margin-top: 10px;
+  padding: 10px;
   background-color: #fff;
   box-sizing: border-box;
 }
@@ -291,5 +291,21 @@ export default {
 .el-submenu .el-menu-item {
   padding: 0;
   min-width: auto;
+}
+
+.el-menu-item {
+  color: #fff;
+}
+
+.el-submenu .el-menu-item:hover {
+  background-color: #4f4f4f;
+}
+
+.firist-title .el-submenu__title {
+  color: #fff;
+  font-size: 20px;
+}
+.firist-title .el-submenu__title:hover {
+  background-color: #4f4f4f;
 }
 </style>

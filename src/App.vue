@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import "./static/css/common.css";
+import "./assets/css/common.css";
 export default {
   name: 'App',
   data () {

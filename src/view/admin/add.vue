@@ -229,7 +229,7 @@ export default {
 </script>
 <style lang="css">
   .add-container{
-    margin-top: 20px;
+    padding: 10px;
   }
   .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;

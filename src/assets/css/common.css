@@ -123,7 +123,8 @@ a:active {
 }
 
 textarea {
-  resize: none
+  resize: none;
+  font-family: auto;
 }
 
 iframe {
@@ -217,8 +218,4 @@ iframe {
 .el-form-item .el-form-item__label {
   text-align: left;
   font-size: 13px;  
-}
-
-.el-upload-list--picture-card .el-upload-list__item {
-  height: auto !important;
 }

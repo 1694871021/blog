@@ -12,7 +12,7 @@
     >
       <el-table-column type="selection" width="30"></el-table-column>
       <el-table-column prop="navname" label="导航菜单" width="100"></el-table-column>
-      <el-table-column prop="navname1" label="菜单英文名" width="100"></el-table-column>
+      <el-table-column prop="site" label="菜单英文名" width="100"></el-table-column>
       <el-table-column prop="introduction" label="菜单简介" width="200"></el-table-column>
 
       <el-table-column prop="isswitch" label="是否切换背景" width="120"></el-table-column>
@@ -20,7 +20,7 @@
       <el-table-column prop="filelist" label="背景图"  style="padding: 5px;overflow:hidden;">
         <template slot-scope="scope">
           <span v-for="item in scope.row.filelist" :key="item.url">
-            <img :src="item.url" max-width="50" height="50" style="padding: 0 5px 2px 0; border-radius: 6px;" />
+            <img :src="item.url" max-width="50" height="50" style="margin-right: 5px; border-radius: 6px;" />
           </span>
         </template>
       </el-table-column>
@@ -36,26 +36,26 @@
         <el-form-item label="菜单名称" prop="navname" style="width:50%" required>
           <el-input v-model="ruleForm.navname"></el-input>
         </el-form-item>
-        <el-form-item label="菜单名称英文名" prop="navname1" style="width:50%" required>
-          <el-input v-model="ruleForm.navname1"></el-input>
+        <el-form-item label="菜单名称英文名" prop="site" style="width:50%" required>
+          <el-input v-model="ruleForm.site"></el-input>
         </el-form-item>
         <el-form-item label="简介" prop="introduction" style="width:50%" required>
           <el-input type="textarea" v-model="ruleForm.introduction"></el-input>
         </el-form-item>
-        <el-form-item label="是否切换背景" prop="isswitch" style="width:10%" required>
+        <el-form-item label="是否切换背景" prop="isswitch" style="width:10%">
           <el-switch v-model="ruleForm.isswitch"></el-switch>
         </el-form-item>
-        <el-form-item label="切换背景时间" prop="switchtime" style="width:20%" required>
+        <el-form-item label="切换背景时间" prop="switchtime" style="width:20%">
           <el-input v-model="ruleForm.switchtime"></el-input>
         </el-form-item>
-        <el-form-item class="banner-image-select" label="背景图" prop="filelist" required>
+        <el-form-item class="banner-image-select" label="背景图" prop="filelist">
           <ul class="el-upload-list el-upload-list--picture-card">
             <li :tabindex="index" class="el-upload-list__item is-ready" v-for="(file, index) in ruleForm.filelist" :key="file.navname">
               <div>
                 <span>
                   <img :src="file.url" alt="" class="el-upload-list__item-thumbnail">
                   <span class="el-upload-list__item-actions">
-                    <span class="el-upload-list__item-delete" @click="handleRemove(file)">
+                    <span class="el-upload-list__item-delete" @click="handleRemove(file, index)">
                       <i class="el-icon-delete"></i>
                     </span>
                   </span>
@@ -77,7 +77,7 @@
         </el-form-item>
         <el-form-item style="text-align: right">
           <el-button type="primary"  size="mini" round @click="submitForm('ruleForm')">保存</el-button>
-          <el-button  size="mini" round>取消</el-button>
+          <el-button  size="mini" round @click="dialogVisible = false">取消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -85,52 +85,125 @@
 
 </template>
 <script>
-import api from '../../utils/api';
+import api, { url } from '../../utils/api';
 export default {
   data() {
     return {
       list: [],
-      listLoading: false,
+      listLoading: true,
       sels: [],
       dialogVisible: false,
       ruleForm:{
         navname: '',
-        navname1: '',
+        site: '',
         introduction: '',
         isswitch: true,
         switchtime: 8,
-        filelist: [{
-          name: 'food.jpeg',
-          url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-        }],
+        filelist: [],
       },
       rules: {},
       disabled: false,
       dialogTitle: '新增',
 
-      fileList: [
-        {
-          name: 'food.jpeg',
-          url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-        }
-      ]
+      fileList: []
     }
   },
   mounted() {
-    api.getBannerList({ userid: this.$store.getters.getuserId }).then(res => {
-      if (res && res.code == 0) {
-        this.list = res.data.map((item)=> {
-          return Object.assign({}, item, {filelist: JSON.parse(item.filelist)})
-        });
-      } else {
-        this.$message({
-          type: "error",
-          message: "获取失败"
-        })
-      }
-    })
+    this.getBannerList()
   },
   methods: {
+    getBannerList() {
+      api.getBannerList({ userid: this.$store.getters.getuserId }).then(res => {
+        if (res && res.code == 0) {
+          this.list = res.data.map((item)=> {
+            console.log(3333333,item.isswitch, JSON.parse(item.isswitch))
+            return Object.assign({}, item, {filelist: JSON.parse(item.filelist)}, {isswitch: JSON.parse(item.isswitch)})
+          });
+          this.listLoading = false;
+        } else {
+          this.$message({
+            type: "error",
+            message: "获取失败"
+          })
+        }
+      })
+    },
+    
+    selsChange: function(sels) {
+      this.sels = sels;
+    },
+
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          let params = this.ruleForm;
+          // 生成导航栏
+          if(this.fileList.length) {
+            params.filelist = JSON.stringify(this.fileList);
+          }
+          params.userid = this.$store.getters.getuserId;
+          api.setBannerImage(params).then(res => {
+            if(res && res.code==0){
+              this.$refs['ruleForm'].resetFields()
+              this.fileList = [];
+              this.dialogVisible = false;
+              this.getBannerList();
+              this.$message({
+                type: "success",
+                message: "添加成功"
+              });
+            }
+          })
+        } else {
+          return false;
+        }
+      });
+    },
+    // 上传图片
+    uploadCover1(file) {
+      var formData = new FormData();
+      formData.append("cover",file.file);
+      formData.append("uploadType", 1);
+      api.uploadImg(formData).then(res => {
+        if(res && res.code == 0){
+          this.fileList.push({
+            name: file.file.name,
+            url: url + res.data
+          })
+          console.log(33333333, this.fileList, this.ruleForm.filelist)
+          this.$message({
+            type: "success",
+            message: res.message
+          });
+        } else {
+          this.$message({
+            type: "error",
+            message: file.message
+          });
+        }
+      })
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === 'image/jpeg';
+      const isLt2M = file.size / 1024 / 1024 < 2;
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!');
+      }
+      return isLt2M;
+    },
+    
+    //显示编辑界面
+    handleEdit: function(index, row) {
+      var t = this;
+      if(row) {
+        this.dialogTitle = '编辑'
+        this.ruleForm = row;
+        this.fileList = JSON.parse(JSON.stringify(row.filelist));
+      } else {
+        this.dialogTitle = '新增'
+      }
+      this.dialogVisible = true
+    },
     //删除
     handleDel: function(index, row) {
       this.$confirm("确认删除该记录吗?", "提示", {
@@ -154,72 +227,34 @@ export default {
         })
       }).catch(() => {});
     },
-    //显示编辑界面
-    handleEdit: function(index, row) {
-      if(index) {
-        this.dialogTitle = '编辑'
-      } else {
-        this.dialogTitle = '新增'
-      }
-      this.dialogVisible = true; 
-    },
-    selsChange: function(sels) {
-      this.sels = sels;
-    },
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          let params = this.ruleForm;
-          // 生成导航栏
-          if(this.fileList.length) {
-            params.filelist = JSON.stringify(this.fileList);
-          }
-          params.userid = this.$store.state.userInfo.userid;
-          api.setBannerImage(params).then(res => {
-            if(res && res.code==0){
+    handleRemove(file, index) {
+      var path = file.url.split('3001')[1];
+      api.delImg({path}).then((res)=> {
+        if(res.code == 0) {
+          this.ruleForm.filelist.splice(index, 1);
+          this.fileList.splice(index, 1);
+          // 删除后更新数据
+          api.undateImg({site: this.ruleForm.site,userid: this.$store.getters.getuserId, filelist: parse.stringify(this.fileList)}).then((res)=>{
+            if(res.code == 0) {
               this.$message({
-                type: "success",
-                message: "添加成功"
-              });
+                type: "succsee",
+                message: res.message
+              })
+            } else {
+              this.$message({
+                type: "error",
+                message: res.message
+              })
             }
           })
-        } else {
-          return false;
-        }
-      });
-    },
-    uploadCover1(file) {
-      var formData = new FormData();
-      formData.append("cover",file.file);
-      formData.uploadType = 1;
-      api.uploadImg(formData).then(res => {
-        if(res && res.code == 0){
-          this.fileList.push({
-            name: file.name,
-            url: url + res.data
-          })
-          this.$message({
-            type: "success",
-            message: res.message
-          });
+          
         } else {
           this.$message({
             type: "error",
-            message: file.message
-          });
+            message: res.message
+          })
         }
       })
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg';
-      const isLt2M = file.size / 1024 / 1024 < 2;
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!');
-      }
-      return isLt2M;
-    },
-    handleRemove(file) {
-      console.log(file);
     }
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-item clearfix wow slideInUp" data-wow-duration="2s" data-wow-iteration="1" data-wow-offset="0">
+  <div class="custom-item wow slideInUp" data-wow-duration="2s" data-wow-iteration="1" data-wow-offset="0">
     <div class="custom-image">
       <img :src="item.coverImage" alt="">
     </div>
@@ -58,7 +58,7 @@ export default {
   }
   
   .custom-content {
-    width: 69%;
+    width: calc(100% - 230px);
     color: #555;
     .custom-title {
       font-size: 22px;
@@ -68,6 +68,10 @@ export default {
         white-space:nowrap;
         overflow:hidden;
         text-overflow:ellipsis;
+        transition: all 0.3s;
+        &:hover {
+          color: #409EFF;
+        }
       }
     }
     // 一行溢出隐藏
@@ -95,6 +99,7 @@ export default {
         }
         .iconfont {
           margin-right: 3px;
+          vertical-align: text-top;
         }
       }
 
@@ -104,7 +109,7 @@ export default {
         text-align: center;
         border-radius: 6px;
         cursor: pointer;
-        background: #ff9800;
+        background: #409EFF;
         a {
           color: #fff;
         }
