@@ -24,7 +24,7 @@
             <svg class="icon" aria-hidden="true" :class="{dianzanAnimate}">
               <use xlink:href="#icon-dianzan1"></use>
             </svg>
-            {{commentInfo.likenum || 0}}
+            {{commentInfo.dianzan || 0}}
           </span>
           <span @click="replyClick(commentInfo)">
             <svg class="icon" aria-hidden="true">
@@ -32,7 +32,7 @@
             </svg>
             {{commentInfo.subcomment && commentInfo.subcomment.length}}
           </span>
-          <span @click="delClick(commentInfo.commentid)">
+          <span @click="delClick(commentInfo.commentid)" v-if="commentInfo.userid == userid">
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-shanchu1"></use>
             </svg>
@@ -48,6 +48,7 @@ import api from '../utils/api'
 export default {
   data() {
     return {
+      userid: this.$store.getters.getuserId || '',
       islogin: this.$store.getters.getuserId || '',
       dianzanAnimate: false
     }
@@ -73,7 +74,7 @@ export default {
       // dom.classList.add('show')
       api.commentstTumbsup({commentid: this.commentInfo.commentid}).then((res)=>{
         if(res.code == 0) {
-          this.commentInfo.likenum +=1;
+          this.commentInfo.dianzan +=1;
           this.dianzanAnimate = true
         }
       })

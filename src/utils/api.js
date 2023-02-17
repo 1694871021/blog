@@ -1,8 +1,8 @@
 import { GET, POST, LOAD, http } from './request.js';
 
-export let url = 'http://127.0.0.1:3001'; //开发环境
+// export let url = 'http://127.0.0.1:3001'; //开发环境
 
-// export let url = 'http://47.243.61.198:3001'; //生成环境
+export let url = 'http://47.243.61.198:3001'; //生成环境
 
 // 添加文章
 const addArticle = (params) =>{
@@ -43,6 +43,9 @@ const postdianzan = (params) =>{
 }
 const postshoucang = (params) =>{
   return POST(params,url + '/users/postshoucang')
+}
+const collectionList = (params) =>{
+  return POST(params,url + '/users/collectionList')
 }
 
 
@@ -136,6 +139,7 @@ export default {
   commentsDel,
   postdianzan,
   postshoucang,
+  collectionList,
   setUserInfo,
   getUserInfo,
   setBannerImage,

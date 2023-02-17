@@ -7,7 +7,7 @@
       <el-form-item label="文章摘要" style="width:60%" prop="summary" required>
         <el-input v-model="ruleForm.summary"></el-input>
       </el-form-item>
-      <el-form-item label="标签" prop="tags" required> 
+      <el-form-item label="文章标签" prop="tags" required> 
         <el-tag :key="tag" v-for="tag in tags" closable :disable-transitions="false" @close="handleClose(tag)">
           {{tag}}
         </el-tag>
@@ -18,6 +18,16 @@
         </el-input>
         <el-button v-else class="button-new-tag" size="small" @click="showInput">添加标签</el-button>
       </el-form-item> 
+      <el-form-item label="文章类型" style="width:60%" prop="type" required>
+        <el-select v-model="ruleForm.type" placeholder="请选择">
+          <el-option
+            v-for="item in typeArr"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="文章图片" prop="coverImage" required> 
         <el-upload
           class="avatar-uploader"
@@ -50,11 +60,13 @@ export default {
       ruleForm:{
         title: '',
         coverImage: '',
-        tags: '',
+        tags: [],
+        type: '',
         content: '',
         time: ''
       },
       tags: [],
+      typeArr: [{label: '前端', value: '前端'}, {label: '后端', value: '后端'}, {label: '其他', value: '其他'}],
       inputVisible: false,
       inputValue: '',
       rules: {},
@@ -96,11 +108,19 @@ export default {
       }
     }
   },
+  mounted() {
+    if(this.$route.query && this.$route.query.row) {
+      this.ruleForm = this.$route.query.row;
+      this.tags = this.ruleForm.tags.split(',')
+    }
+  },
   methods: {
     onSubmit:function(){
       let params = this.ruleForm;
       let menu = document.getElementsByClassName('v-note-navigation-content')[0].innerHTML; // 生成导航栏
-      params.articleId = Number(Math.random().toString().substr(3,10) + Date.now()).toString(36);
+      if(!params.articleId) {
+        params.articleId = Number(Math.random().toString().substr(3,10) + Date.now()).toString(36);
+      }
       params.time = moment().format('YYYY-MM-DD HH:mm:ss');
       params.tags = this.tags.join(',');
       params.menu = menu;
@@ -108,21 +128,18 @@ export default {
         if(res && res.code==0){
           this.$message({
             type: "success",
-            message: "添加成功"
+            message: res.message
           });
           this.$router.push({path: '/admin/list'});
+        } else {
+          this.$message({
+            type: "error",
+            message: res.message
+          });
         }
       })
     },
 
-    handleInputConfirm() {
-      let inputValue = this.inputValue;
-      if (inputValue) {
-        this.tags.push(inputValue);
-      }
-      this.inputVisible = false;
-      this.inputValue = '';
-    },
     // 上传展示图片
     handleAvatarSuccess(res, file) {
       console.log(1111111111111, res, file)
@@ -170,7 +187,7 @@ export default {
       var formData = new FormData();
       //创建formdata对象
       formData.append("cover",$file);
-      formData.uploadType = 4;
+      formData.append("uploadType", 4);
       api.uploadImg(formData).then(res => {
         if(res && res.code == 0){
           var imgUrl = url + res.data;
@@ -198,6 +215,7 @@ export default {
       let inputValue = this.inputValue;
       if (inputValue) {
         this.tags.push(inputValue);
+        this.ruleForm.tags.push(inputValue)
       }
       this.inputVisible = false;
       this.inputValue = '';
@@ -207,14 +225,14 @@ export default {
     uploadCover(file) {
       var formData = new FormData();
       formData.append("cover",file.file);
-      formData.uploadType = 2;
+      formData.append("uploadType", 2);
       api.uploadImg(formData).then(res => {
         if(res && res.code == 0){
           this.$message({
             type: "success",
             message: res.message
           });
-          this.ruleForm.coverImage = url + res.data;
+          this.ruleForm.coverImage = url + '/' + res.data;
         } else {
           this.$message({
             type: "waring",

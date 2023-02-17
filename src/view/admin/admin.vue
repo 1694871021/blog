@@ -226,6 +226,7 @@ export default {
 }
 
 .container .main-nav {
+  height: 100vh;
   display: flex;
   position: absolute;
   top: 60px;
@@ -291,9 +292,6 @@ export default {
 .el-submenu .el-menu-item {
   padding: 0;
   min-width: auto;
-}
-
-.el-menu-item {
   color: #fff;
 }
 

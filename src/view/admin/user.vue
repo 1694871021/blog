@@ -148,7 +148,7 @@ export default {
     uploadCover(file) {
       var formData = new FormData();
       formData.append("cover",file.file);
-      formData.uploadType = '3';
+      formData.append("uploadType", 3);
       api.uploadImg(formData).then(res => {
         if(res && res.code == 0){
           this.$message({
@@ -167,7 +167,7 @@ export default {
     uploadCover1(file) {
       var formData = new FormData();
       formData.append("cover",file.file);
-      formData.uploadType = '2';
+      formData.append("uploadType", 2);
       api.uploadHeadSculpture(formData).then(res => {
         if(res && res.code == 0){
           this.fileList.push({

@@ -23,9 +23,11 @@
       <el-table-column type="selection" width="70"></el-table-column>
       <el-table-column prop="id" label="id" width="70" sortable></el-table-column>
       <el-table-column prop="title" label="标题" width="250" sortable></el-table-column>
-      <el-table-column prop="time" label="上传时间" width="200" sortable></el-table-column>
+      <el-table-column prop="time" label="上传时间" width="100" sortable></el-table-column>
 
       <el-table-column prop="summary" label="摘要" width="250"></el-table-column>
+      <el-table-column prop="tags" label="标签" width="100"></el-table-column>
+      <el-table-column prop="type" label="类型" width="50"></el-table-column>
       <el-table-column prop="coverImage" label="封面" width="200" style="padding: 5px;overflow:hidden;">
         <template slot-scope="scope">
           <img :src="scope.row.coverImage" max-width="50" height="50" style="padding: 5px" />
@@ -117,7 +119,7 @@ export default {
     //显示编辑界面
     handleEdit: function(index, row) {
       this.editLoading = true;
-      this.$router.push({ path: "/add", query: { articleId: row.articleId } });
+      this.$router.push({ path: "/admin/add", query: { row: row } });
       this.editLoading = false;
     },
     selsChange: function(sels) {

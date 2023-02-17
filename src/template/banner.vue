@@ -28,16 +28,21 @@ export default {
       }
     }
   },
+  watch: {
+    '$route': 'init'
+  },
   mounted(){
-    // this.initSwiper(this.swiperInfo.isswitch, this.swiperInfo.switchtime)
-    var site = this.$route.path.replace('/', '');
-    this.getbannerInfo(site)
+    this.init();
   },
   methods: {
+    init() {
+      var site = this.$route.path.replace('/', '');
+      this.getbannerInfo(site)
+    },
     getbannerInfo (site) {
       var t = this;
-      api.getbannerInfo({ site: site, userid: this.$store.getters.getuserId }).then(res => {
-        if (res && res.code == 0) {
+      api.getbannerInfo({ site: site, userid: this.$store.getters.getuserId || '13th01e65o9s0'}).then(res => {
+        if (res && res.code == 0 && res.data.length) {
           t.swiperInfo = res.data[0];
           t.swiperInfo.filelist = JSON.parse(res.data[0].filelist);
           t.$nextTick(function(){

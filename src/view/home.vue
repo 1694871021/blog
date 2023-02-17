@@ -5,7 +5,7 @@
         <div class="card-title">
           <h3>即时热点</h3>
           <div>
-            <a href="">更多</a>
+            <router-link :to="{path: '/site'}">更多</router-link>
           </div>
         </div>
         <div class="card-content">
@@ -84,15 +84,15 @@
         </div>
         <div class="card-content biaoqian">
           <ul>
-            <li>123</li>
-            <li>123</li>
-            <li>123</li>
-            <li>123</li>
-            <li>123</li>
-            <li>123</li>
-            <li>123</li>
-            <li>123</li>
-            <li>123</li>
+            <li>Html</li>
+            <li>Css</li>
+            <li>Javascript</li>
+            <li>Vue</li>
+            <li>Node</li>
+            <li>Elementui</li>
+            <li>小程序</li>
+            <li>项目部署</li>
+            <li>环境安装</li>
           </ul>
         </div>
       </div>
@@ -379,6 +379,7 @@ export default {
         display: flex;
         align-items: center;
         justify-content: center;
+        cursor: pointer;
         &:nth-child(6n + 1), &:nth-child(6n + 2), &:nth-child(6n + 3) {
           background: #f5f5f5;
         };
@@ -394,7 +395,7 @@ export default {
         width: 20px;
         height: 20px;
         content: "";
-        background: #f38b2a;
+        background: #409EFF;
         animation: identifier 5s infinite;
       }
     }

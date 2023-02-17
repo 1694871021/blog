@@ -23,6 +23,9 @@
         </p>
       </div>
     </div>
+    <div class="categroy-flag">
+       {{ item.type }}
+    </div>
   </div>
 </template>
 <script>
@@ -42,6 +45,8 @@ export default {
   padding: 20px 15px;
   margin-bottom: 15px;
   border-radius: 6px;
+  position: relative;
+  overflow: hidden;
   .custom-image {
     width: 230px;
     margin-right: 20px;
@@ -94,6 +99,7 @@ export default {
       justify-content: space-between;
       align-items: center;
       .custom-icon {
+        font-size: 14px;
         span {
           margin-right: 5px;
         }
@@ -115,6 +121,20 @@ export default {
         }
       }
     }
+  }
+  .categroy-flag{
+    position: absolute;
+    color: white;
+    top: 9px;
+    right: -20px;
+    width: 80px;
+    height: 20px;
+    font-size: 14px;
+    background-color: #409eff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: rotate(45deg);
   }
   
   

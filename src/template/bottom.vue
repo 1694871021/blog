@@ -25,7 +25,7 @@
 </script>
 <style>
 .bottom-header {
-    background: linear-gradient(-45deg, rgba(84, 58, 183, 0.5), rgba(0, 172, 193, 0.5), #23a6d5, #23d5ab);
+    background: linear-gradient(-45deg, rgba(60, 11, 246, 0.8), rgb(16, 23, 219, 0.8), #1c22c2, #1a1ca5);
     background-size: 400% 400%;
     animation: gradient 15s ease infinite;
 }

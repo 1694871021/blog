@@ -1,8 +1,5 @@
 <template>
   <div class="login">
-    <div class="login-image">
-      <img style="width: 100%;" src="../assets/images/c6064c3cffb086f20b3ede738184432b.jpeg" alt="">
-    </div>
     <div class="login-box">
       <div class="login-title">
         登录
@@ -37,9 +34,18 @@
             <use xlink:href="#icon-weixinmw"></use>
         </svg>
       </div>
-      <!-- <div class="bottom-image">
-        <img src="../assets/images/c6064c3cffb086f20b3ede738184432b.jpeg" alt="">
-      </div> -->
+    </div>
+    <div class="roll-box1">
+
+    </div>
+    <div class="roll-box2">
+      
+    </div>
+    <div class="roll-box3">
+      
+    </div>
+    <div class="roll-box4">
+      
     </div>
   </div>
 </template>
@@ -140,16 +146,7 @@ export default {
   height: 100vh;
   position: relative;
   color: #808595;
-}
-
-.login-image {
-  height: 100vh;
   overflow: hidden;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: -1;
 }
 
 .login-box {
@@ -258,6 +255,144 @@ export default {
 .bottom-image {
   img {
     width: 100%;
+  }
+}
+
+.roll-box1 {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #615feb;
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  animation-name: roll1;
+  animation-duration: 20s;
+  animation-iteration-count: infinite;
+}
+@keyframes roll1 {
+  0% {
+    top: 100px;
+    left: 100px;
+  }
+  50% {
+    top: 170px;
+    left: 200px;
+  }
+  100% {
+    top: 100px;
+    left: 100px;
+  }
+}
+
+.roll-box2 {
+  width: 141px;
+  height: 100px;
+  border-radius: 20px;
+  overflow: hidden;
+  bottom: 80px;
+  left: 200px;
+  position: absolute;
+  animation-name: roll2;
+  animation-duration: 50s;
+  animation-iteration-count: infinite;
+  &::before {
+    content: "";
+    border-radius: 20px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #ee675c;
+    transform-origin: left bottom;
+    transform: rotate(45deg);
+  }
+}
+@keyframes roll2 {
+  0% {
+    bottom: 80px;
+    left: 200px;
+    transform: rotate(0);
+  }
+  50% {
+    bottom: 50px;
+    left: 300px;
+    transform: rotate(180deg);
+
+  }
+  100% {
+    bottom: 80px;
+    left: 200px;
+    transform: rotate(360deg);
+  }
+}
+.roll-box3 {
+  width: 300px;
+  height: 170px;
+  background: #fdd663;
+  border-radius: 300px 300px 40px 40px;
+  position: absolute;
+  top: -100px;
+  right: 200px;
+  animation-name: roll3;
+  animation-duration: 30s;
+  animation-iteration-count: infinite;
+  transform: rotate(0deg)
+}
+@keyframes roll3 {
+  0% {
+    top: -100px;
+    right: 200px;
+    transform: rotate(0deg)
+  }
+  25% {
+    top: -150px;
+    right: 250px;
+    transform: rotate(10deg)
+  }
+  50% {
+    top: 0px;
+    right: 300px;
+    transform: rotate(-30deg)
+  }
+  75% {
+    top: 0px;
+    right: 300px;
+    transform: rotate(0deg)
+  }
+  90% {
+    top: -30px;
+    right: 250px;
+    transform: rotate(-20deg)
+  }
+  100% {
+    top: -100px;
+    right: 200px;
+    transform: rotate(-30deg)
+  }
+}
+.roll-box4 {
+  width: 300px;
+  height: 300px;
+  border-radius: 50px;
+  background: #81c995;
+  position: absolute;
+  bottom: -100px;
+  right: -100px;
+  animation-name: roll4;
+  animation-duration: 50s;
+  animation-iteration-count: infinite;
+}
+@keyframes roll4 {
+  0% {
+    transform: rotate(0);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
 </style>

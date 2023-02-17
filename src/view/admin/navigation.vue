@@ -48,32 +48,17 @@
         <el-form-item label="切换背景时间" prop="switchtime" style="width:20%">
           <el-input v-model="ruleForm.switchtime"></el-input>
         </el-form-item>
-        <el-form-item class="banner-image-select" label="背景图" prop="filelist">
-          <ul class="el-upload-list el-upload-list--picture-card">
-            <li :tabindex="index" class="el-upload-list__item is-ready" v-for="(file, index) in ruleForm.filelist" :key="file.navname">
-              <div>
-                <span>
-                  <img :src="file.url" alt="" class="el-upload-list__item-thumbnail">
-                  <span class="el-upload-list__item-actions">
-                    <span class="el-upload-list__item-delete" @click="handleRemove(file, index)">
-                      <i class="el-icon-delete"></i>
-                    </span>
-                  </span>
-                </span>
-              </div>
-            </li>
-          </ul>
-          <el-upload action="" list-type="picture-card" :http-request="uploadCover1" :before-upload="beforeAvatarUpload">
-            <i slot="default" class="el-icon-plus"></i>
-              <div slot="file" slot-scope="{file}">
-                <img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
-                <span class="el-upload-list__item-actions">
-                  <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleRemove(file)">
-                    <i class="el-icon-delete"></i>
-                  </span>
-                </span>
-            </div>
-          </el-upload>
+        <el-form-item class="banner-image-select clearfix" label="背景图" prop="filelist">
+          <li class="pic-list" v-for="(file, index) in ruleForm.filelist" :key="file.navname">
+            <img :src="file.url" alt="">
+            <p class="icon-delete">
+              <i class=" el-icon-delete" @click="handleRemove(file, index)"></i>
+            </p>
+          </li>
+          <div class="add-box">
+            <input id="upfile" name="upfile" type="file" accept=".jpg, .jpeg .png, .gif" @change="uploadCover()" >
+            <i class="icon-plus el-icon-plus"></i>
+          </div>
         </el-form-item>
         <el-form-item style="text-align: right">
           <el-button type="primary"  size="mini" round @click="submitForm('ruleForm')">保存</el-button>
@@ -116,7 +101,6 @@ export default {
       api.getBannerList({ userid: this.$store.getters.getuserId }).then(res => {
         if (res && res.code == 0) {
           this.list = res.data.map((item)=> {
-            console.log(3333333,item.isswitch, JSON.parse(item.isswitch))
             return Object.assign({}, item, {filelist: JSON.parse(item.filelist)}, {isswitch: JSON.parse(item.isswitch)})
           });
           this.listLoading = false;
@@ -136,16 +120,12 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          let params = this.ruleForm;
-          // 生成导航栏
-          if(this.fileList.length) {
-            params.filelist = JSON.stringify(this.fileList);
-          }
+          let params = JSON.parse(JSON.stringify(this.ruleForm));
+          params.filelist = JSON.stringify(this.ruleForm.filelist);
           params.userid = this.$store.getters.getuserId;
           api.setBannerImage(params).then(res => {
             if(res && res.code==0){
               this.$refs['ruleForm'].resetFields()
-              this.fileList = [];
               this.dialogVisible = false;
               this.getBannerList();
               this.$message({
@@ -159,18 +139,29 @@ export default {
         }
       });
     },
+    uploadFile(){
+        document.getElementById("#upfile").click();            
+    },
     // 上传图片
-    uploadCover1(file) {
+    uploadCover() {
+      let file = document.getElementById("upfile").files[0]
+      if (file.size / 1024 / 1024 > 2) {
+        this.$message.error('上传头像图片大小不能超过 2MB!');
+        return
+      }
+      if(file.name && !/\.(?:jpg|jpeg|png|gif)$/.test(file.name)){ 
+        this.$message.error('上传的图片格式只能是：jpg, png, gif');
+        return; 
+      } 
       var formData = new FormData();
-      formData.append("cover",file.file);
+      formData.append("cover",file);
       formData.append("uploadType", 1);
       api.uploadImg(formData).then(res => {
         if(res && res.code == 0){
-          this.fileList.push({
-            name: file.file.name,
+          this.ruleForm.filelist.push({
+            name: file.name,
             url: url + res.data
           })
-          console.log(33333333, this.fileList, this.ruleForm.filelist)
           this.$message({
             type: "success",
             message: res.message
@@ -183,14 +174,6 @@ export default {
         }
       })
     },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg';
-      const isLt2M = file.size / 1024 / 1024 < 2;
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!');
-      }
-      return isLt2M;
-    },
     
     //显示编辑界面
     handleEdit: function(index, row) {
@@ -198,11 +181,14 @@ export default {
       if(row) {
         this.dialogTitle = '编辑'
         this.ruleForm = row;
-        this.fileList = JSON.parse(JSON.stringify(row.filelist));
+        this.dialogVisible = true;
       } else {
-        this.dialogTitle = '新增'
+        this.dialogVisible = true;
+        this.dialogTitle = '新增';
+        this.$nextTick(function(){
+          this.$refs['ruleForm'].resetFields();
+        })
       }
-      this.dialogVisible = true
     },
     //删除
     handleDel: function(index, row) {
@@ -232,9 +218,8 @@ export default {
       api.delImg({path}).then((res)=> {
         if(res.code == 0) {
           this.ruleForm.filelist.splice(index, 1);
-          this.fileList.splice(index, 1);
           // 删除后更新数据
-          api.undateImg({site: this.ruleForm.site,userid: this.$store.getters.getuserId, filelist: parse.stringify(this.fileList)}).then((res)=>{
+          api.undateImg({site: this.ruleForm.site,userid: this.$store.getters.getuserId, filelist: JSON.stringify(this.ruleForm.filelist)}).then((res)=>{
             if(res.code == 0) {
               this.$message({
                 type: "succsee",
@@ -264,11 +249,80 @@ export default {
   padding: 6px 0 !important;
 }
 
+.el-table__header .splice-header .cell {
+  text-overflow: clip;
+}
+
 .custom-dialog {
   margin-top: 5vh !important;
 }
 
-.banner-image-select .el-form-item__content {
-  display: flex;
+.banner-image-select .pic-list {
+  width: 150px;
+  border: 1px dashed #409EFF;
+  border-radius: 6px;
+  margin: 0 10px 10px 0;
+  position: relative;
+  float: left;
+}
+
+.banner-image-select .pic-list img{
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.banner-image-select .pic-list .icon-delete {
+  width: 100%;
+  height: 100%;
+  font-size: 22px;
+  line-height: 90px;
+  text-align: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(255,255,255, 0.8);
+  opacity: 0;
+}
+
+.banner-image-select .pic-list .icon-delete>i {
+  cursor: pointer;
+}
+
+.banner-image-select .pic-list .icon-delete:hover {
+  opacity: 1;
+}
+
+.banner-image-select .add-box {
+  background-color: #fbfdff;
+  border: 1px dashed #c0ccda;
+  border-radius: 6px;
+  box-sizing: border-box;
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+  line-height: 100px;
+  position: relative;
+  float: left;
+}
+
+.banner-image-select .add-box .icon-plus {
+  position: absolute;
+  top: 50%;
+  font-size: 26px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.banner-image-select input {
+  width: 100%;
+  height: 100%;
+  display: inline-block;
+  opacity: 0;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
 }
 </style>

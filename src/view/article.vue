@@ -16,7 +16,7 @@
           <span>来源：<i>{{ markData.username }}个人博客</i></span>
         </p>
         <!-- 标签 -->
-        <p style="color: #FE9800">
+        <p style="color: #FE9800;font-size: 16px;font-style: oblique;">
           {{markData.tags}}
         </p>
       </div>
@@ -133,6 +133,7 @@ export default {
     this.getDetails();
     // 评论接口
     this.getCommentsList();
+    this.collectionList();
     let userInfo = this.$store.state.userInfo;
     if(userInfo.sclist && userInfo.sclist.indexOf(this.articleId)) {
       this.isshoucang = true;
@@ -160,7 +161,19 @@ export default {
     getCommentsList() {
       api.getCommentsList({articleId: this.articleId}).then((res)=>{
         if(res.code == 0) {
+          res.data.forEach(item=> {
+            item.subcomment = [];
+          })
           this.commentList = res.data;
+        }
+      })
+    },
+    collectionList() {
+      api.collectionList({userid: this.$store.getters.getuserId}).then((res)=>{
+        if(res.code == 0 && res.data.length) {
+          res.data.forEach((item)=> {
+            if(item.articleId == this.articleId) this.isshoucang = true;
+          })
         }
       })
     },
@@ -189,7 +202,8 @@ export default {
         content: this.mainComment,
         articleId: this.articleId,
         commentid: Number(Math.random().toString().substr(3,8) + Date.now()).toString(36),
-        commentime: moment().format('YYYY-MM-DD HH:mm:ss')
+        commentime: moment().format('YYYY-MM-DD HH:mm:ss'),
+        dianzan: 0
       }
 
       params = Object.assign({}, params, this.$store.getters.getUserInfo)
@@ -225,7 +239,8 @@ export default {
         parentid: this.parentId,
         replyusername: this.replyusername || '',
         commentid: Number(Math.random().toString().substr(3,8) + Date.now()).toString(36),
-        commentime: moment().format('YYYY-MM-DD HH:mm:ss')
+        commentime: moment().format('YYYY-MM-DD HH:mm:ss'),
+        dianzan: 0
       }
       params = Object.assign({}, params, this.$store.getters.getUserInfo)
       api.postComments(params).then((res)=>{
@@ -271,7 +286,7 @@ export default {
     // 处理导航目录
     slopeMenu(){
       var _this = window;
-      var gopage = document.querySelectorAll(".detail-menu a");
+      var gopage = document.querySelectorAll(".detail-menu a"); 
       var gopage1 = document.querySelectorAll(".detail-mavon a");
       var gopage3 = document.getElementsByClassName("detail-box")[0];
       gopage.forEach((item,index) => {
@@ -300,14 +315,15 @@ export default {
       })
     },
     shoucangClick() {
-      if(!this.$store.getters.getuserId) {
+      var userid = this.$store.getters.getuserId;
+      if(!userid) {
         this.$message({
           type: 'warning',
           message: '还未登录，请先进行登录！'
         })
         return
       }
-      api.postshoucang({articleId: this.articleId, shoucang: !this.isshoucang}).then((res)=>{
+      api.postshoucang({articlename: this.markData.title, articleId: this.articleId, shoucang: !this.isshoucang, userid}).then((res)=>{
         if(res.code == 0) {
           if(!this.isshoucang) {
             this.markData.shoucang += 1

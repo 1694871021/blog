@@ -1,6 +1,6 @@
 <!-- 网站导航 -->
 <template>
-  <div>
+  <div class="site-container">
     <div class="banner-video">
       <!--视频来自阿里云首页，有需要请自行更换-->
       <!--video autoplay loop muted>
@@ -293,11 +293,10 @@
   </div>  
 </template>
 <script>
-import $ from '../static/js/jquery-3.6.3.min.js';
+import $ from '../assets/js/jquery-3.6.3.min.js';
 export default {
   data() {
     return {
-
     }
   },
   mounted() {
@@ -338,7 +337,7 @@ export default {
         $('#word').empty();
         $('#word').hide();
         //$("form").submit();
-         $('.submit').trigger('click');//触发搜索事件
+        $('.submit').trigger('click');//触发搜索事件
     })
     $(document).on('click', '.container,.banner-video,nav', function() {
         $('#word').empty();
@@ -355,19 +354,11 @@ export default {
 }
 </script>
 <style>
-/*
-作者:D.Young
-主页：https://blog.5iux.cn/
-github：https://github.com/5iux/5iux.github.io
-日期：2020-09-24
-版权所有，请勿删除
-*/
-body {
+.site-container {
     font-size: 14px;
     background: #f4f8fb;
     overflow-x: hidden;
 }
-
 svg.icon {
     width: 14px;
     height: 14px;
@@ -376,20 +367,16 @@ svg.icon {
     fill: currentColor;
     overflow: hidden;
 }
-
 /*menu*/
 .navbar-light .navbar-nav .nav-link {
     color: #fff;
 }
-
 .navbar-light .navbar-nav .active .nav-link {
     color: #fff;
 }
-
 .navbar-light .navbar-nav .nav-link:hover {
     color: #fff;
 }
-
 /* --- search --- */
 #search {
     width: 100%;
@@ -399,11 +386,9 @@ svg.icon {
     z-index: 2000;
     border-radius: 5px;
 }
-
 #search form {
     position: relative
 }
-
 #search-text {
     width: 100%;
     height: 50px;
@@ -416,13 +401,11 @@ svg.icon {
     box-shadow: 0 0.5rem 0.625rem #d4d4d44d;
     transition: 0.3s all linear;
 }
-
 #search-text:focus {
     background: #fff;
     box-shadow: 0 0px 24px 0 rgba(50, 50, 50, 0.08);
     border-color: #fff;
 }
-
 #search button {
     position: absolute;
     top: 0;
@@ -437,34 +420,27 @@ svg.icon {
     border-radius: 3px;
     outline: none;
 }
-
 #search button:hover {
     cursor: pointer
 }
-
 #search button i {
     color: #ddd;
     font-size: 18px
 }
-
 .search-group {
     display: none;
     padding-left: 75px
 }
-
 .s-current .search-type {
     padding-left: 0;
     display: block
 }
-
 .s-current {
     display: block
 }
-
 #search-list {
     position: relative
 }
-
 .s-type {
     position: absolute;
     top: 0;
@@ -472,17 +448,14 @@ svg.icon {
     z-index: 13;
     width: 75px
 }
-
 .s-type:hover {
     height: auto
 }
-
 .s-type>span {
     display: block;
     height: 31px;
     width: 75px
 }
-
 .s-type-list {
     display: none;
     position: absolute;
@@ -493,7 +466,6 @@ svg.icon {
     border-radius: 5px;
     box-shadow: 0 9px 20px rgba(0, 0, 0, .16)
 }
-
 .s-type-list:before {
     position: absolute;
     top: -1pc;
@@ -505,7 +477,6 @@ svg.icon {
     border: 10px solid transparent;
     border-bottom-color: #fff
 }
-
 .s-type-list label {
     display: block;
     font-size: 15px;
@@ -516,11 +487,9 @@ svg.icon {
     cursor: pointer;
     transition: .3s
 }
-
 .s-type-list label:hover {
     background: rgba(136, 136, 136, .1)
 }
-
 .s-type-list .tile-lg {
     color: #fff;
     width: 3pc;
@@ -531,11 +500,9 @@ svg.icon {
     display: block;
     margin: auto
 }
-
 .s-type:hover .s-type-list {
     display: block
 }
-
 .type-text {
     position: absolute;
     left: 0;
@@ -544,22 +511,18 @@ svg.icon {
     font-size: 1pc;
     line-height: 31px
 }
-
 .search-type {
     white-space: nowrap;
     margin: 0
 }
-
 .search-type label {
     margin: 0
 }
-
 .search-type li {
     display: inline-block;
     background: rgb(255 255 255 / 0.4);
     border-radius: 3px 3px 0 0;
 }
-
 .search-type li label {
     display: inline-block;
     padding: 0 11px;
@@ -568,16 +531,13 @@ svg.icon {
     border-radius: 3px 3px 0 0;
     cursor: pointer
 }
-
 .search-type input:checked+label,
 .search-type input:hover+label {
     background-color: #fff;
 }
-
 #search-text::-webkit-input-placeholder {
     color: #bbb;
 }
-
 #word {
     position: absolute;
     list-style: none;
@@ -591,43 +551,36 @@ svg.icon {
     box-sizing: border-box;
     z-index: 20000;
 }
-
 #word li {
     height: 35px;
     padding: 0 5px;
     text-indent: 30px;
-    background: url(../static/images/sou.svg) no-repeat 5px;
+    background: url(../assets/images/sou.svg) no-repeat 5px;
     background-size: 20px;
     line-height: 35px;
     cursor: pointer;
     font-size: 16px;
     border-radius: 5px;
 }
-
 #word li:hover {
     background-color: #ddd;
 }
-
 .set-check {
     margin-top: 3px;
     font-size: 9pt
 }
-
 .set-check label {
     margin-left: 3px
 }
-
 .set-check input,
 .set-check label {
     opacity: 0;
     transition: all .3s ease
 }
-
 .search-type li {
     list-style: none;
     display: inline-block
 }
-
 .mylist {
     list-style: none;
     padding: 10px 20px;
@@ -640,22 +593,18 @@ svg.icon {
     display: flex;
     flex-wrap: wrap;
 }
-
 .mylist li:nth-child(n+2) {
     margin: 5px 0 5px;
 }
-
 .mylist li:nth-child(n+2) svg {
     width: 30px;
     height: 30px;
     padding: 5px;
     border-radius: 5px;
 }
-
 .mylist li:nth-child(n+2) span {
     font-size: 12px;
 }
-
 .mylist li:nth-child(n+2) {
     width: 100px;
     transition: 0.3s all linear;
@@ -664,7 +613,6 @@ svg.icon {
     padding: 10px 0;
     border-radius: 10px;
 }
-
 .mylist li:nth-child(n+2) svg {
     width: 45px;
     height: 45px;
@@ -676,11 +624,9 @@ svg.icon {
     display: block;
     box-sizing: border-box;
 }
-
 .mylist li:nth-child(n+2):hover {
     background: #eee;
 }
-
 .mylist li:nth-child(n+2) span {
     width: 100%;
     display: block;
@@ -689,12 +635,10 @@ svg.icon {
     text-align: center;
     font-size: 13px;
 }
-
 .mylist li a {
     color: #555;
     display: block;
 }
-
 .mylist li.title {
     width: 100%;
     min-width: auto;
@@ -706,7 +650,6 @@ svg.icon {
     border-bottom: 1px solid #eee;
     margin-bottom: 10px;
 }
-
 .banner-video {
     position: absolute;
     width: 100%;
@@ -715,17 +658,14 @@ svg.icon {
     top: 0;
     max-height: 750px;
 }
-
 .banner-video video {
     width: 2048px;
     float: left;
 }
-
 .banner-video img {
     width: 1920px;
     float: left;
 }
-
 .bottom-cover {
     width: 100%;
     height: 50%;
@@ -733,19 +673,16 @@ svg.icon {
     bottom: 0px;
     z-index: 1;
 }
-
 @media screen and (min-width:1200px) {
     .mylist li:nth-child(n+2) {
         min-width: 12.5%;
     }
 }
-
 @media screen and (min-width:992px) and (max-width:1200px) {
     .mylist li:nth-child(n+2) {
         min-width: 16.6%;
     }
 }
-
 @media screen and (max-width: 992px) {
     .mylist li:nth-child(n+2) {
         min-width: 25%;
@@ -753,39 +690,31 @@ svg.icon {
     #he-plugin-simple {
         display: none !important;
     }
-
     .banner-video video {
         width: 1200px;
     }
-
     .banner-video img {
         width: 1200px;
     }
-
     div#navbarsExample05 {
         background: rgba(0, 0, 0, 0.8);
         padding: 10px 30px;
         border-radius: 20px;
     }
 }
-
 @media screen and (max-width:767px) {
     .banner-video video {
         width: 960px;
     }
-
     .banner-video img {
         width: 960px;
     }
-
     .s-type-list label {
         padding: 5px 0
     }
-
     .search-type {
         overflow: hidden
     }
-
     .search-list {
         height: 30px;
         overflow-y: hidden;
@@ -793,33 +722,26 @@ svg.icon {
         white-space: nowrap
     }
 }
-
 @media screen and (max-width:560px) {
-
 }
-
 @media (min-width: 576px) {
   .container-site, .container-sm {
       max-width: 540px;
   }
 }
-
 @media (min-width: 768px) {
   .container-site, .container-md, .container-sm {
       max-width: 720px;
   }
 }
-
 @media (min-width: 992px) {
   .container-site, .container-lg, .container-md, .container-sm {
       max-width: 960px;
   }
 }
-
 @media (min-width: 1200px) {
   .container-site, .container-lg, .container-md, .container-sm, .container-xl {
       max-width: 1140px;
   }
 }
-
 </style>

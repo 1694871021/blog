@@ -16,14 +16,14 @@
         <a href="#" @click="setTheme('dark')">黑色主题</a>
         <div v-if="islogin" class="nav-right-avatar">
           <span>你好，{{ userInfo.username }}</span>
-          <el-dropdown>
+          <el-dropdown @command="signOut">
             <el-avatar shape="circle" size="large" :src="userInfo.avatar"></el-avatar>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>消息</el-dropdown-item>
               <el-dropdown-item>
                 <router-link to="/admin">个人中心</router-link>
               </el-dropdown-item>
-              <el-dropdown-item @click="signOut" divided>退出登录</el-dropdown-item>
+              <el-dropdown-item command="1" divided>退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>
@@ -115,17 +115,19 @@ export default {
       let sceollTop =
         document.documentElement.scrollTop || document.body.scrollTop;
       if (sceollTop > 60) {
-        this.$refs.navs.setAttribute( "style","background:white");
+        if(this.$refs.navs) this.$refs.navs.setAttribute( "style","background:white");
       } else {
-        this.$refs.navs.setAttribute("style", "background:transparent");
+        if(this.$refs.navs) this.$refs.navs.setAttribute("style", "background:transparent");
       }
     },
-    signOut() {
-      removeToken('$username');
-      removeToken('$avatar');
-      removeToken('$userid');
-      window.location.href= '/'
-      this.$router.push({path: '/'});
+    signOut(e) {
+      if(e == 1) {
+        removeToken('$username');
+        removeToken('$avatar');
+        removeToken('$userid');
+        window.location.href= '/'
+        this.$router.push({path: '/'});
+      }
     },
     onSend(e) {
       this.bannerShow = e;
