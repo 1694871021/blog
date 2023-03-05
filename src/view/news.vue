@@ -10,7 +10,7 @@
             <span>  微博</span>
           </p>
         </el-tab-pane>
-        <el-tab-pane label="weixinresou">
+        <el-tab-pane label="weixin">
           <p slot="label" >
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-weixinmw"></use>
@@ -52,7 +52,7 @@
         </svg>
         微博 . 热搜榜
       </div>
-      <div class="title" v-else-if="type == 'weixinresou'">
+      <div class="title" v-else-if="type == 'weixin'">
         <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-weixinmw"></use>
         </svg>
@@ -77,7 +77,7 @@
         哔哩哔哩 . 热搜榜
       </div>
       <ul>
-        <li class="new-item" v-for="(item) in newList" :key="item.id">
+        <li class="new-item" v-for="(item, index) in newList" :key="item.id">
           <!-- <p>
             <span class="index">{{ item.realpos }}</span>
             <a :href="item.url" target="_blank">{{ item.word }}</a>
@@ -89,7 +89,7 @@
             {{ (item.num / 10000).toFixed(2) }}万
           </p> -->
           <p>
-            <span class="index">{{ item.rank }}</span>
+            <span class="index">{{ index + 1 }}</span>
             <a :href="item.url" target="_blank">{{ item.name }}</a>
           </p>
           <p>{{ item.viewnum }}</p>
@@ -117,12 +117,9 @@ export default {
     handleClick(tab, event) {
       this.type = tab.label;
       this.getnewList();
-      console.log(tab, event);
     },
     getnewList() {
-      
-      
-      api.getnewList({key: 'cywrjxXdxmzCcL25m4GTTu3EUE', type: this.type}).then((res)=>{
+      api.getnewList({key: 'jvOvNCdDe2IguxAfv0P9c1ftnC', type: this.type}).then((res)=>{
         if(res && res.code == 200) {
           this.newList = res.data;
         }

@@ -1,8 +1,8 @@
 <template>
   <div class="bottom-header">
     <div class="inner-header">
-        <p>版本号：2.0.1</p>
-        <p>建站时间：2022.1.12</p>
+        <p>版本号：3.0.1</p>
+        <p>建站时间：2021.06.12</p>
         <p>github地址：https://github.com/1694871021/blog</p>
     </div>
     <div>

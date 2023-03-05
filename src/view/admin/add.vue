@@ -124,6 +124,7 @@ export default {
       params.time = moment().format('YYYY-MM-DD HH:mm:ss');
       params.tags = this.tags.join(',');
       params.menu = menu;
+      params = Object.assign({}, params, this.$store.getters.getUserInfo)
       api.addArticle(params).then(res => {
         if(res && res.code==0){
           this.$message({
@@ -138,6 +139,8 @@ export default {
           });
         }
       })
+      // 链接提交百度
+      // http://data.zz.baidu.com/urls?site=www.qnlya.com.cn&token=n3a32q57EaRYm40E
     },
 
     // 上传展示图片
@@ -271,7 +274,7 @@ export default {
     color: #8c939d;
     width: 178px;
     height: 178px;
-    line-height: 178px;
+    line-height: 178px !important;
     text-align: center;
   }
   .el-upload-list--picture-card .el-upload-list__item{

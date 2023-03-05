@@ -13,7 +13,7 @@
         <p class="article-auth">
           <span>发布时间：<i>{{ markData.time }}</i></span>
           <span>作者：<i>{{ markData.username }}</i></span>
-          <span>来源：<i>{{ markData.username }}个人博客</i></span>
+          <span>来源：<i>{{ markData.username }}的个人博客</i></span>
         </p>
         <!-- 标签 -->
         <p style="color: #FE9800;font-size: 16px;font-style: oblique;">
@@ -286,15 +286,16 @@ export default {
     // 处理导航目录
     slopeMenu(){
       var _this = window;
-      var gopage = document.querySelectorAll(".detail-menu a"); 
-      var gopage1 = document.querySelectorAll(".detail-mavon a");
-      var gopage3 = document.getElementsByClassName("detail-box")[0];
-      gopage.forEach((item,index) => {
+      var page1 = document.querySelectorAll(".detail-menu a"); 
+      var page2 = document.querySelectorAll(".detail-mavon a");
+      var page3 = document.getElementsByClassName("detail-banner")[0];
+      document.get
+      page1.forEach((item,index) => {
         item.addEventListener('click', function(){
-          gopage1.forEach((gitem,gindex)=>{
+          page2.forEach((gitem,gindex)=>{
             if(gitem.id == item.id){
               if(gitem.offsetTop > 0){
-                var y = gitem.offsetTop + gopage3.offsetHeight - 50;
+                var y = gitem.offsetTop + page3.offsetHeight + 100;
                 _this.scrollTo(0,y);
               }
             }
@@ -444,7 +445,7 @@ export default {
         margin: 2px 0;
         font-weight: 500;
         font-size: 17px;
-        color: #2185d0;
+        color: #ff9800;
         border-bottom: none;
         cursor: pointer;
         line-height: normal;
@@ -587,5 +588,16 @@ export default {
   text-align:center;
   padding: 0 15px;
   background: #fff;
+}
+.markdown-body {
+  font-size: 15px;
+}
+
+.markdown-body pre {
+  background-color: #2c3131 !important;
+}
+
+.markdown-body pre code {
+  color: #909090 !important;
 }
 </style>

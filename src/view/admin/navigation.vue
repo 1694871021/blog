@@ -60,6 +60,7 @@
             <i class="icon-plus el-icon-plus"></i>
           </div>
         </el-form-item>
+        <p style="color: red; font-size: 12px;margin-left: 120px;">由于受window限制无法获取绝对路径，所以需要先在C:盘下创建images文件夹，将图片放入后上传*</p>
         <el-form-item style="text-align: right">
           <el-button type="primary"  size="mini" round @click="submitForm('ruleForm')">保存</el-button>
           <el-button  size="mini" round @click="dialogVisible = false">取消</el-button>
@@ -160,7 +161,8 @@ export default {
         if(res && res.code == 0){
           this.ruleForm.filelist.push({
             name: file.name,
-            url: url + res.data
+            url: res.data.url,
+            ossPath: res.data.ossPath
           })
           this.$message({
             type: "success",
@@ -174,7 +176,6 @@ export default {
         }
       })
     },
-    
     //显示编辑界面
     handleEdit: function(index, row) {
       var t = this;
@@ -214,7 +215,8 @@ export default {
       }).catch(() => {});
     },
     handleRemove(file, index) {
-      var path = file.url.split('3001')[1];
+      var path = file.ossPath;
+      console.log(33333333333, file)
       api.delImg({path}).then((res)=> {
         if(res.code == 0) {
           this.ruleForm.filelist.splice(index, 1);
@@ -257,6 +259,10 @@ export default {
   margin-top: 5vh !important;
 }
 
+.banner-image-select {
+  position: relative;
+}
+
 .banner-image-select .pic-list {
   width: 150px;
   border: 1px dashed #409EFF;
@@ -297,6 +303,7 @@ export default {
   background-color: #fbfdff;
   border: 1px dashed #c0ccda;
   border-radius: 6px;
+  margin-right: 10px;
   box-sizing: border-box;
   width: 100px;
   height: 100px;

@@ -38,9 +38,9 @@
        <banner :site="site"></banner>
     </header>
     <main>
-      <router-view @onSend="onSend"></router-view>  
+      <router-view @onSend="onSend" @onSend1="onSend1"></router-view>  
     </main>
-    <footer>
+    <footer v-show="footerShow">
       <bottom></bottom>
     </footer>
   </div>
@@ -62,7 +62,8 @@ export default {
       userInfo: {},
       site: 'index',
       activeName: 'home',
-      bannerShow: true
+      bannerShow: true,
+      footerShow: true
     };
   },
   created() {
@@ -131,6 +132,9 @@ export default {
     },
     onSend(e) {
       this.bannerShow = e;
+    },
+    onSend1(e) {
+      this.footerShow = e;
     }
   }
 };

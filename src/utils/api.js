@@ -108,16 +108,38 @@ function getEmailCode(params) {
 }
 
 // 新闻列表
-// function getnewList(params) {
-//   return GET(params, '/api/hotnews/all');
-// }
+function getnewList(params) {
+  return GET(params, 'https://api.itapi.cn/api/hotnews/' + params.type);
+}
 // https://api.iwyu.com/API/weibo 微博热搜接口
 // https://api.iwyu.com/API/baiduresou 百度热搜
 // https://api.iwyu.com/API/douyinrm 抖音热搜
 // https://api.iwyu.com/API/toutiao 头条热搜
-function getnewList(params) {
-  return GET(params, 'https://api.iwyu.com/API/weibo', {'Access-Control-Allow-Origin': 'localhost:8080'});
-}
+// function getnewList(params) {
+//   // return new Promise((resolve, reject)=>{
+//   //   // 因为接口https://api.iwyu.com/API/本身做了跨域处理所以不能重复处理跨域。用fetch实现不跨域请求
+//   //   fetch('https://api.iwyu.com/API/' + params, {
+//   //       headers: {
+//   //         // 'Accept': 'application/json, text/plain, */*',
+//   //         // 'Content-Type': 'application/x-www-form-urlencoded'
+//   //         // "content-type": "application/json;charset=UFT-8"
+//   //       },
+//   //       method: 'GET',
+//   //       mode: 'no-cors'
+//   //     }).then(response => {
+//   //       console.log(2222222222222222, response)
+//   //       if (response.ok) {
+//   //         return response.json() // 解析为可读数据
+//   //       } else {
+//   //         return Promise.reject('请求失败')
+//   //       }
+//   //     }).then((res) => {  //执行结果是 resolve就调用then方法，，第二个then是真正的数据 
+//   //       console.log(33333333333, res)
+//   //       resolve(res[0]);
+//   //     })
+//   // })
+//   return GET(params, 'https://api.iwyu.com/API/weibo');
+// }
 
 
 // 法定节日列表

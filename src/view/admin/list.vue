@@ -83,7 +83,7 @@ export default {
     },
     //获取用户列表
     getUserList() {
-      let params = { page: this.page, pagesize:10,type:''};
+      let params = { page: this.page, pagesize:10, userid: this.$store.getters.getuserId};
       this.listLoading = true;
       api.getRecommendList(params).then(res => {
         if (res && res.code == 0) {

@@ -16,7 +16,7 @@
         </el-input>
         <el-button v-else class="button-new-tag" size="small" @click="showInput">添加标签</el-button>
       </el-form-item> 
-      <el-form-item label="头像" prop="avatar"> 
+      <el-form-item label="头像" prop="avatar" required> 
         <el-upload
           class="avatar-uploader"
           action=""
@@ -26,28 +26,6 @@
           <img v-if="ruleForm.avatar" :src="ruleForm.avatar" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
-      </el-form-item>
-      <el-form-item label="个性化banner图" prop="bannerAvatar">
-        <el-upload action="" list-type="picture-card" :http-request="uploadCover1" :before-upload="beforeAvatarUpload">
-          <i slot="default" class="el-icon-plus"></i>
-          <div slot="file" slot-scope="{file}">
-            <img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
-            <span class="el-upload-list__item-actions">
-              <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
-                <i class="el-icon-zoom-in"></i>
-              </span>
-              <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleDownload(file)"> 
-                <i class="el-icon-download"></i>
-              </span>
-              <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleRemove(file)">
-                <i class="el-icon-delete"></i>
-              </span>
-            </span>
-          </div>
-        </el-upload>
-        <el-dialog :visible.sync="dialogVisible">
-          <img width="100%" :src="dialogImageUrl" alt="">
-        </el-dialog>
       </el-form-item>
       <el-form-item>
         <el-button type="primary"  size="medium" round @click="submitForm('ruleForm')">确定</el-button>
@@ -65,8 +43,8 @@ export default {
       ruleForm:{
         username: '',
         usermotto: '',
-        tags: '',
-        avatar: ''
+        tags: [],
+        avatar: 'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png'
       },
       tags: [],
       inputVisible: false,
@@ -80,25 +58,32 @@ export default {
       fileList: []
     }
   },
+  mounted() {
+    api.getUserInfo({userid: this.$store.getters.getuserId}).then(res => {
+      if(res && res.code==0){
+        this.ruleForm = res.data;
+        if(this.ruleForm.tags) {
+          this.ruleForm.tags = res.data.split(',');
+        } else {
+          this.ruleForm.tags = [];
+        }
+      }
+    })
+  },
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           let params = this.ruleForm;
           // 生成导航栏
-          params.userid = this.$store.state.userInfo.userid;
-          params.tag = this.tags.join(',');
-          if(this.fileList.length) {
-            params.filelist = this.fileList.join(',');
-          }
-          if(!params.avatar) {
-            params.avatar = this.defaultAvatar;
-          }
+          params.userid = this.$store.getters.getuserId;
+          params.tags = this.tags.join(',');
           api.setUserInfo(params).then(res => {
             if(res && res.code==0){
+              this.$router.push({path: '/'});
               this.$message({
                 type: "success",
-                message: "添加成功"
+                message: res.message
               });
             }
           })
@@ -135,9 +120,10 @@ export default {
             type: "waring",
             message: '不能重复添加'
           });
-        return
+          return
         } else {
           this.tags.push(this.inputValue);
+          this.ruleForm.tags.push(this.inputValue)
         }
       }
       this.inputVisible = false;
@@ -164,37 +150,12 @@ export default {
         }
       })
     },
-    uploadCover1(file) {
-      var formData = new FormData();
-      formData.append("cover",file.file);
-      formData.append("uploadType", 2);
-      api.uploadHeadSculpture(formData).then(res => {
-        if(res && res.code == 0){
-          this.fileList.push({
-            name: file.name,
-            url: url + res.data
-          })
-          this.$message({
-            type: "success",
-            message: res.message
-          });
-        } else {
-          this.$message({
-            type: "error",
-            message: file.message
-          });
-        }
-      })
-    },
     handleRemove(file) {
       console.log(file);
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
-    },
-    handleDownload(file) {
-      console.log(file);
     }
   }
 };

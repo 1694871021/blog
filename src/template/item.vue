@@ -48,13 +48,14 @@ export default {
   position: relative;
   overflow: hidden;
   .custom-image {
-    width: 230px;
+    width: 210px;
     margin-right: 20px;
     border-radius: 6px;
     cursor: pointer;
     overflow: hidden;
     img {
       width: 100%;
+      display: block;
       transition: all 0.3s;
       &:hover {
         transform: scale(1.1);
@@ -84,8 +85,9 @@ export default {
     // overflow:hidden;
     // text-overflow:ellipsis;
     .custom-text {
-      min-height: 40px;
-      font-size: 16px;
+      min-height: 48px;
+      line-height: 24px;
+      font-size: 14px;
       margin: 10px 0;
       overflow : hidden;
       text-overflow: ellipsis;
@@ -98,8 +100,9 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      color: #777;
       .custom-icon {
-        font-size: 14px;
+        font-size: 13px;
         span {
           margin-right: 5px;
         }
